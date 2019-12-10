@@ -101,7 +101,7 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 		<iron-list id="ironList" items="[[ dataPlane ]]" as="node" selected-item="{{ highlightedNode }}" selection-enabled>
 			<template>
 				<div tabindex$="[[ tabIndex ]]">
-					<div hidden$="[[ !_renderSection(_search, index, dataPlane, node) ]]" class="section">[[ node.sectionName ]]
+					<div hidden$="[[ !_renderSection(_search, index, dataPlane, node.parentSectionName) ]]" class="section">[[ node.parentSectionName ]]
 					</div>
 					<div class$="[[_computeRowClass('node-item pointer layout horizontal center', selected)]]">
 						<div class="flex" on-dblclick="_onNodeDblClicked">[[ node.name ]]</div>
@@ -317,7 +317,7 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 	}
 	/**
 	 * Normalizes and returns an Array of nodes
-	 * with the properties name, path, sectionName, children
+	 * with the properties name, path, parentSectionName, children
 	 * @param {Array} nodes - The input nodes
 	 * @return {Array} - The normalized nodes
 	 */
@@ -329,12 +329,14 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 			if (!node) {
 				return node;
 			}
-			const path = node.pathLocator || node.path;
+			const path = node.pathLocator || node.path,
+				pathLocatorSeparator = this.tree.pathLocatorSeparator,
+				parentPath = path.includes(pathLocatorSeparator) ? path.substring(0, path.lastIndexOf(pathLocatorSeparator)) : path;
 			return {
 				name: node[this.tree.searchProperty],
 				path,
-				sectionName: this.tree.getPathString(path, this.tree.searchProperty),
-				children: node[this.tree.childProperty]
+				children: node[this.tree.childProperty],
+				parentSectionName: this.tree.getPathString(parentPath, this.tree.searchProperty)
 			};
 		});
 	}
@@ -466,18 +468,18 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 	 * @param {Boolean} searching - If a search is currently executed
 	 * @param {Number} index - The node's current index in the list
 	 * @param {Array} dataPlane - The node list
-	 * @param {Object} node - The node
+	 * @param {Object} parentSectionName - The nodes current parent section name
 	 * @return {Boolean} - If the path should be visible
 	 */
-	_renderSection(searching, index, dataPlane, node) {
-		if (!searching || index == null || dataPlane == null || index >= dataPlane.length || node == null || node.sectionName == null) {
+	_renderSection(searching, index, dataPlane, parentSectionName) {
+		if (!searching || index == null || dataPlane == null || index >= dataPlane.length || parentSectionName == null) {
 			return false;
 		}
 		if (index === 0) {
 			return true;
 		}
 		const prevItem = dataPlane[index - 1];
-		if (prevItem.sectionName === node) {
+		if (prevItem.parentSectionName === parentSectionName) {
 			return false;
 		}
 		return true;
