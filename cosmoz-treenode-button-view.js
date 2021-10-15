@@ -75,10 +75,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			}
 		</style>
 		<div class="actions">
-			<paper-button class="open" raised on-tap="openDialogTree">
+			<paper-button class="open" raised on-click="openDialogTree">
 				<div class="pathToNode">[[ _getButtonLabel(nodesOnNodePath, buttonTextPlaceholder) ]]</div>
 			</paper-button>
-			<paper-icon-button icon="clear" on-tap="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
+			<paper-icon-button icon="clear" on-click="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
 		</div>
 		<template is="dom-if" if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]">
 			<div id="chips" class="row">
@@ -91,7 +91,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		<cosmoz-dialog id="dialogTree" class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
 			<template>
 				<h2>[[ dialogText ]]</h2>
-				<cosmoz-treenode-navigator id="treeNavigator" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
+				<cosmoz-treenode-navigator id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
 					on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
 					search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
 					search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
@@ -99,7 +99,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 					<slot></slot>
 				</cosmoz-treenode-navigator>
 				<div class="buttons">
-					<paper-button disabled="[[!highlightedNodePath]]" dialog-confirm autofocus on-tap="selectNode">[[ _('Select', t) ]]</paper-button>
+					<paper-button disabled="[[!highlightedNodePath]]" dialog-confirm autofocus on-click="selectNode">[[ _('Select', t) ]]</paper-button>
 					<paper-button dialog-dismiss>[[ _('Cancel', t) ]]</paper-button>
 				</div>
 			</template>
