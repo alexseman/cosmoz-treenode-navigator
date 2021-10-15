@@ -96,7 +96,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 					search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
 					search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
 					on-node-dblclicked="_selectNodeAndCloseDialog">
-						<slot></slot>
+					<slot></slot>
 				</cosmoz-treenode-navigator>
 				<div class="buttons">
 					<paper-button disabled="[[!highlightedNodePath]]" dialog-confirm autofocus on-tap="selectNode">[[ _('Select', t) ]]</paper-button>
