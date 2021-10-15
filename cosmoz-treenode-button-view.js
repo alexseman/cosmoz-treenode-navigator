@@ -1,7 +1,3 @@
-import '@webcomponents/shadycss/entrypoints/apply-shim';
-
-import '@polymer/polymer/lib/elements/custom-style';
-import '@polymer/iron-flex-layout/iron-flex-layout-classes';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
 
@@ -27,85 +23,70 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	/* eslint-disable-next-line max-lines-per-function */
 	static get template() {
 		return html`
-		<custom-style>
-			<style include="iron-flex iron-flex-alignment">
+		<style>
+			.actions { display: flex; }
+			.open { flex: auto; }
+			.pathToNode {
+				max-width: 320px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				direction: rtl;
+				text-align: left;
+			}
 
-				.pathToNode {
-					max-width: 320px;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-					direction: rtl;
-					text-align: left;
-				}
+			#chips {
+				display: flex;
+				flex-wrap: wrap;
+				max-width: 90%;
+				padding: 20px;
+			}
+			.chip {
+				border-radius: 500px;
+				background-color: #e0e0e0;
+				margin: 1px 4px 1px 0;
+				white-space: nowrap;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+			}
+			.chip > span {
+				color: #424242;
+				margin-left: 10px;
+				font-size: 13px;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.chip iron-icon {
+				margin: 2px 4px;
+				color: #cdcdcd;
+				background-color: #a6a6a6;
+				border-radius: 500px;
+				cursor: pointer;
+				min-width: 16px;
+				width: 16px;
+				min-height: 16px;
+				height: 16px;
+			}
 
-				paper-dialog .buttons {
-					@apply --cosmoz-treenode-button-view-dialog-container;
-				}
-
-				#chips {
-					@apply --layout-horizontal;
-					@apply --layout-end;
-					@apply --layout-wrap;
-					max-width: 90%;
-					padding: 20px;
-				}
-				.chip {
-					border-radius: 500px;
-					background-color: #e0e0e0;
-					margin: 1px 4px 1px 0;
-					white-space: nowrap;
-					overflow: hidden;
-					@apply --layout-horizontal;
-					@apply --layout-center;
-				}
-				.chip > span {
-					color: #424242;
-					margin-left: 10px;
-					font-size: 13px;
-					overflow: hidden;
-					text-overflow: ellipsis;
-				}
-				.chip iron-icon {
-					margin: 2px 4px;
-					color: #cdcdcd;
-					background-color: #a6a6a6;
-					border-radius: 500px;
-					cursor: pointer;
-					min-width: 16px;
-					width: 16px;
-					min-height: 16px;
-					height: 16px;
-				}
-
-				#dialogTree {
-					min-width: 250px !important;
-					width: 450px;
-				}
-
-				/* FIXME: https://github.com/PolymerElements/iron-flex-layout/issues/86 */
-				[hidden] {
-					display: none;
-				}
-
-			</style>
-		</custom-style>
-
-		<div class="vertical layout actions">
-			<div class="horizontal layout actions">
-				<paper-button class="flex" raised on-tap="openDialogTree">
-					<div class="pathToNode">[[ _getButtonLabel(nodesOnNodePath, buttonTextPlaceholder) ]]</div>
-				</paper-button>
-				<paper-icon-button icon="clear" on-tap="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
-			</div>
-			<template is="dom-if" if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]">
-				<div id="chips" class="row">
-					<template is="dom-repeat" items="[[ selectedNodes ]]">
-						<div class="chip"><span>[[ _getChipText(item, tree) ]]</span><iron-icon icon="clear" on-click="_clearItemSelection"></iron-icon></div>
-					</template>
-				</div>
-			</template>
+			#dialogTree {
+				min-width: 250px !important;
+				width: 450px;
+			}
+		</style>
+		<div class="actions">
+			<paper-button class="open" raised on-tap="openDialogTree">
+				<div class="pathToNode">[[ _getButtonLabel(nodesOnNodePath, buttonTextPlaceholder) ]]</div>
+			</paper-button>
+			<paper-icon-button icon="clear" on-tap="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
 		</div>
+		<template is="dom-if" if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]">
+			<div id="chips" class="row">
+				<template is="dom-repeat" items="[[ selectedNodes ]]">
+					<div class="chip"><span>[[ _getChipText(item, tree) ]]</span><iron-icon icon="clear" on-click="_clearItemSelection"></iron-icon></div>
+				</template>
+			</div>
+		</template>
 
 		<cosmoz-dialog id="dialogTree" class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
 			<template>

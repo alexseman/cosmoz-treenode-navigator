@@ -36,8 +36,8 @@
 						<iron-ajax url="data/adminFiles.json" handle-as="json" last-response="{{ treeData1 }}" auto="[[ doRequest ]]">
 					</iron-ajax>
 					<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node"
-						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]">
-					</cosmoz-treenode-button-view>
+						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]"
+					></cosmoz-treenode-button-view>
 				</template>
 			</dom-bind>
 		</template>
@@ -55,8 +55,9 @@
 					<template is="dom-bind">
 						<iron-ajax url="data/johnFiles.json" handle-as="json" last-response="{{ treeData2 }}" auto="[[ doRequest ]]">
 						</iron-ajax>
-						<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node" node-path="{{ path2 }}" selected-node="{{ selectedNode2 }}" tree="[[ getTree(treeData2) ]]">
-						</cosmoz-treenode-button-view>
+						<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node" node-path="{{ path2 }}" selected-node="{{ selectedNode2 }}"
+								tree="[[ getTree(treeData2) ]]" multi-selection
+						></cosmoz-treenode-button-view>
 					</template>
 				</dom-bind>
 			</template>
