@@ -50,7 +50,7 @@ jobs:
         $NEO_CC before-build
         echo "::add-matcher::.github/karma-problem-matcher.json"
         npm test
-        $NEO_CC after-build --exit-code $
+        $NEO_CC after-build --exit-code $?
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
