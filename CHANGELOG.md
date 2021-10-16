@@ -1,3 +1,10 @@
+## [3.0.6](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.5...v3.0.6) (2021-10-16)
+
+
+### Bug Fixes
+
+* **cosmoz-treenode-button-view:** rtl fixes ([43e70a3](https://github.com/neovici/cosmoz-treenode-navigator/commit/43e70a3684ce2187d0afbb0666613d62067ef02a))
+
 ## [3.0.5](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.4...v3.0.5) (2021-10-16)
 
 
