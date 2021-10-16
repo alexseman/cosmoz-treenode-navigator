@@ -1,7 +1,4 @@
-import '@webcomponents/shadycss/entrypoints/apply-shim';
-
 import '@polymer/polymer/lib/elements/custom-style';
-import '@polymer/iron-flex-layout/iron-flex-layout-classes';
 import '@polymer/paper-input/paper-input';
 import '@polymer/paper-button/paper-button';
 import '@polymer/paper-icon-button/paper-icon-button';
@@ -26,8 +23,7 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 	/* eslint-disable-next-line max-lines-per-function */
 	static get template() {
 		return html`
-		<custom-style>
-			<style include="iron-flex iron-flex-alignment">
+			<style>
 				:host {
 					--cosmoz-treenode-navigator-select-node-icon-color: var(--primary-color, white);
 					--cosmoz-treenode-navigator-list-item-focused-color: #f0f8ff;
@@ -41,6 +37,12 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 					text-decoration: none;
 					color: inherit;
 				}
+
+				.path {
+						display: flex;
+						align-items: center;
+						flex-wrap: wrap;
+					}
 
 				.section {
 					background-color: #f5f5f5;
@@ -68,6 +70,8 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 					font-weight: 400;
 					line-height: 24px;
 					height: 40px;
+					display: flex;
+					align-items: center;
 				}
 
 				.node-item.selected {
@@ -84,18 +88,17 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 					color: var(--cosmoz-treenode-navigator-select-node-icon-color);
 				}
 			</style>
-		</custom-style>
 		<div id="header">
-			<h3 class="layout horizontal center wrap">
-				<paper-icon-button data-path on-tap="openNode" icon="home"></paper-icon-button>
+			<h3 class="path">
+				<paper-icon-button data-path on-click="openNode" icon="home"></paper-icon-button>
 				<template is="dom-repeat" items="[[ _nodesOnOpenNodePath ]]" as="node">
 					<span class="slash">/</span>
-					<span class="pointer" tabindex="0" data-path$="[[ node.path ]]" on-tap="openNode" on-keydown="_clickOnEnterOrSpace">[[ _getNodeName(node) ]]
+					<span class="pointer" tabindex="0" data-path$="[[ node.path ]]" on-click="openNode" on-keydown="_clickOnEnterOrSpace">[[ _getNodeName(node) ]]
 					</span>
 				</template>
 			</h3>
-			<paper-input tabindex="0" id="searchInput" class="flex" label="[[ searchPlaceholder ]]" title$="[[ searchPlaceholder ]]" value="{{ searchValue }}">
-				<paper-icon-button icon="clear" slot="suffix" hidden$="[[ !_search ]]" on-tap="_clearSearch"></paper-icon-button>
+			<paper-input tabindex="0" id="searchInput" label="[[ searchPlaceholder ]]" title$="[[ searchPlaceholder ]]" value="{{ searchValue }}">
+				<paper-icon-button icon="clear" slot="suffix" hidden$="[[ !_search ]]" on-click="_clearSearch"></paper-icon-button>
 			</paper-input>
 		</div>
 		<iron-list id="ironList" items="[[ dataPlane ]]" as="node" selected-item="{{ highlightedNode }}" selection-enabled>
@@ -103,15 +106,15 @@ class CosmozTreenodeNavigator extends translatable(PolymerElement) {
 				<div tabindex$="[[ tabIndex ]]">
 					<div hidden$="[[ !_renderSection(_search, index, dataPlane, node.parentSectionName) ]]" class="section">[[ node.parentSectionName ]]
 					</div>
-					<div class$="[[_computeRowClass('node-item pointer layout horizontal center', selected)]]">
-						<div class="flex" on-dblclick="_onNodeDblClicked">[[ node.name ]]</div>
-						<paper-icon-button hidden$="[[ !hasChildren(node) ]]" icon="icons:arrow-forward" data-path$="[[ node.path ]]" on-tap="openNode">
+					<div class$="[[_computeRowClass('node-item pointer', selected)]]">
+						<div style="flex: auto" on-dblclick="_onNodeDblClicked">[[ node.name ]]</div>
+						<paper-icon-button hidden$="[[ !hasChildren(node) ]]" icon="icons:arrow-forward" data-path$="[[ node.path ]]" on-click="openNode">
 						</paper-icon-button>
 					</div>
 				</div>
 			</template>
 		</iron-list>
-		<paper-button hidden$="[[ !_showGlobalSearchBtn(_search, _openNodePath) ]]" on-tap="tryGlobalSearch">[[ searchGlobalPlaceholder ]]
+		<paper-button hidden$="[[ !_showGlobalSearchBtn(_search, _openNodePath) ]]" on-click="tryGlobalSearch">[[ searchGlobalPlaceholder ]]
 		</paper-button>
 `;
 	}

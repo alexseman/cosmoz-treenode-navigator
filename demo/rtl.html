@@ -4,20 +4,20 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 	<title>cosmoz-treenode-navigator demo</title>
+	<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+	<script type="module">
+		import "@polymer/iron-demo-helpers/demo-pages-shared-styles.js";
+		import "@polymer/iron-demo-helpers/demo-snippet.js";
+		import "../cosmoz-treenode-navigator.js";
+		import "../cosmoz-treenode-button-view.js";
 
-	<script src="/components/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-
-	<script type="module" src="/components/@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
-	<script type="module" src="/components/@polymer/iron-demo-helpers/demo-snippet.js"></script>
-
-	<script type="module" src="/components/@polymer/iron-ajax/iron-ajax.js"></script>
-
-	<script type="module" src="../cosmoz-treenode-navigator.js"></script>
-	<script type="module" src="../cosmoz-treenode-button-view.js"></script>
-
-	<custom-style>
-		<style is="custom-style" include="demo-pages-shared-styles"></style>
-	</custom-style>
+		const $documentContainer = document.createElement('template');
+		$documentContainer.innerHTML = `
+			<custom-style>
+				<style is="custom-style" include="demo-pages-shared-styles"></style>
+			</custom-style>`;
+		document.head.appendChild($documentContainer.content);
+	</script>
 </head>
 
 <body>
@@ -30,8 +30,6 @@
 			<template>
 				<dom-bind id="demo1">
 					<template is="dom-bind">
-						<iron-ajax url="../test/data/rtlTest.json" handle-as="json" last-response="{{ treeData1 }}" auto="[[ doRequest ]]">
-						</iron-ajax>
 						<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node" node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]">
 						</cosmoz-treenode-button-view>
 					</template>
@@ -41,6 +39,7 @@
 	</div>
 	<script type="module">
 		import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
+		import treeData1 from '../test/data/rtlTest';
 		const getTree = data => {
 				if (data) {
 					return new DefaultTree(data);
@@ -50,7 +49,7 @@
 				let tpl = document.getElementById(id);
 				tpl = !tpl.set ? tpl.firstElementChild : tpl;
 				tpl.getTree = getTree;
-				tpl.set('doRequest', true);
+				tpl.treeData1 = treeData1;
 			};
 		initTemplate('demo1');
 	</script>
