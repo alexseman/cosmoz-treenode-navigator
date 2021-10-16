@@ -1,3 +1,12 @@
+## [3.0.5](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.4...v3.0.5) (2021-10-16)
+
+
+### Bug Fixes
+
+* **cosmoz-treenode-button-view:** mobile tweaks ([d9444c4](https://github.com/neovici/cosmoz-treenode-navigator/commit/d9444c47f1bf587579fade958efab47dd9687e3c))
+* **cosmoz-treenode-navigator:** remove iron-flex-layout ([6cc69b6](https://github.com/neovici/cosmoz-treenode-navigator/commit/6cc69b67e75e92f2c0953f95061b0199e41fa5e3))
+* replace tap with click ([505d103](https://github.com/neovici/cosmoz-treenode-navigator/commit/505d103f6f84ccdcbdcf5571bdb53abed0703386))
+
 ## [3.0.4](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.3...v3.0.4) (2020-01-06)
 
 
