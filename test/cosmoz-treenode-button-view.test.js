@@ -17,7 +17,7 @@ suite('rtl', () => {
 		// stamped asynchronously, so we need to wait a bit.
 		setTimeout(() => {
 			const buttonLabel = treeButton.shadowRoot.querySelector('.pathToNode').textContent;
-			assert.equal(buttonLabel, '1 / 2 / 3');
+			assert.isTrue(buttonLabel.endsWith('1 / 2 / 3'));
 			done();
 		}, 500);
 	});
