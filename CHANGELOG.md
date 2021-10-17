@@ -1,3 +1,10 @@
+## [3.0.8](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.7...v3.0.8) (2021-10-17)
+
+
+### Bug Fixes
+
+* css comments ([f9d97f3](https://github.com/neovici/cosmoz-treenode-navigator/commit/f9d97f3e257044e6ebd78f69f3571c8663a741a9))
+
 ## [3.0.7](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.6...v3.0.7) (2021-10-17)
 
 
