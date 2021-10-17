@@ -1,3 +1,10 @@
+## [3.0.7](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.6...v3.0.7) (2021-10-17)
+
+
+### Bug Fixes
+
+* **cosmoz-treenode-button-view:** ios rtl overflow ([80725a7](https://github.com/neovici/cosmoz-treenode-navigator/commit/80725a763f29171cb6af20af81a02a82d1304369))
+
 ## [3.0.6](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.5...v3.0.6) (2021-10-16)
 
 
