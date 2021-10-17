@@ -34,6 +34,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 				direction: rtl;
 				text-align: left;
 			}
+			// Safari only css fix
+			@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
+				.pathToNode span { display: inline-block;}
+			}}
 
 			#chips {
 				display: flex;
@@ -75,8 +79,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			}
 		</style>
 		<div class="actions">
-			<paper-button class="open" raised on-click="openDialogTree">
-				<div class="pathToNode">&lrm;[[ _getButtonLabel(nodesOnNodePath, buttonTextPlaceholder) ]]</div>
+			<paper-button class="open" raised on-click="openDialogTree" title="[[ buttonText ]]">
+				<div class="pathToNode">&lrm;<span>[[ buttonText ]]</span></div>
 			</paper-button>
 			<paper-icon-button icon="clear" on-click="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
 		</div>
@@ -163,6 +167,12 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 				type: String,
 				computed: 'getButtonTextPlaceholder(multiSelection)'
 			},
+
+			buttonText: {
+				type: String,
+				computed: '_getButtonLabel(nodesOnNodePath, buttonTextPlaceholder)'
+			},
+
 			/*
 			* The path of the selected node
 			*/
