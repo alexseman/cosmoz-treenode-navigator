@@ -1,3 +1,10 @@
+# [3.1.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.8...v3.1.0) (2021-12-07)
+
+
+### Features
+
+* add button and icon slots ([d7ea96d](https://github.com/neovici/cosmoz-treenode-navigator/commit/d7ea96dc06bf01e3dc33cbf76fa523524d67ba2c))
+
 ## [3.0.8](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.7...v3.0.8) (2021-10-17)
 
 
