@@ -79,10 +79,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			}
 		</style>
 		<div class="actions">
-			<paper-button class="open" raised on-click="openDialogTree" title="[[ buttonText ]]">
+			<paper-button part="button" class="open" raised on-click="openDialogTree" title="[[ buttonText ]]">
 				<div class="pathToNode">&lrm;<span>[[ buttonText ]]</span></div>
 			</paper-button>
-			<paper-icon-button icon="clear" on-click="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
+			<paper-icon-button part="clear" icon="clear" on-click="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
 		</div>
 		<template is="dom-if" if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]">
 			<div id="chips" class="row">
