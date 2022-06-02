@@ -1,3 +1,10 @@
+## [3.1.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.1.0...v3.1.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* **chips:** scrollbar for many chips ([dc68de6](https://github.com/neovici/cosmoz-treenode-navigator/commit/dc68de694ebedc8a78b4df8ecdf13d108a82f1f8))
+
 # [3.1.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.0.8...v3.1.0) (2021-12-07)
 
 
