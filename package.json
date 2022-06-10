@@ -79,6 +79,6 @@
 		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"eslint": "^7.0.0",
 		"husky": "^6.0.0",
-		"semantic-release": "^18.0.0"
+		"semantic-release": "^19.0.3"
 	}
 }
