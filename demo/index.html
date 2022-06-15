@@ -11,6 +11,7 @@
 		import "@polymer/iron-ajax/iron-ajax.js";
 		import "../cosmoz-treenode-navigator.js";
 		import "../cosmoz-treenode-button-view.js";
+		import "./index.js";
 
 		const $documentContainer = document.createElement('template');
 		$documentContainer.innerHTML = `
@@ -38,6 +39,7 @@
 					<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node"
 						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]"
 					></cosmoz-treenode-button-view>
+						<cosmoz-treenode-nav></cosmoz-treenode-nav>
 				</template>
 			</dom-bind>
 		</template>

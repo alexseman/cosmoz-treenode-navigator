@@ -47,9 +47,11 @@
 		]
 	},
 	"dependencies": {
+		"@neovici/cfg": "^1.15.2",
 		"@neovici/cosmoz-dialog": "^3.0.0",
 		"@neovici/cosmoz-i18next": "^3.2.0",
 		"@neovici/cosmoz-tree": "^3.0.0",
+		"@open-wc/lit-helpers": "^0.4.1",
 		"@polymer/iron-icons": "^3.0.0",
 		"@polymer/iron-list": "^3.1.0",
 		"@polymer/paper-button": "^3.0.0",
@@ -58,7 +60,9 @@
 		"@polymer/polymer": "^3.4.0",
 		"@web/dev-server": "^0.1.25",
 		"@web/test-runner": "^0.13.19",
-		"@web/test-runner-selenium": "^0.5.2"
+		"@web/test-runner-selenium": "^0.5.2",
+		"haunted": "^4.7.0",
+		"lit-html": "^1.4.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^13.0.0",
