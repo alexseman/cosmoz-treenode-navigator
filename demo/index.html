@@ -6,12 +6,8 @@
 	<title>cosmoz-treenode-navigator demo</title>
 	<script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 	<script type="module">
-		import "@polymer/iron-demo-helpers/demo-pages-shared-styles.js";
-		import "@polymer/iron-demo-helpers/demo-snippet.js";
-		import "@polymer/iron-ajax/iron-ajax.js";
-		import "../cosmoz-treenode-navigator.js";
-		import "../cosmoz-treenode-button-view.js";
-		import "./index.js";
+		import '../cosmoz-treenode-button-view-next.js';
+		import './index.js';
 
 		const $documentContainer = document.createElement('template');
 		$documentContainer.innerHTML = `
@@ -30,20 +26,23 @@
 		<p>
 			The tree data structure simulate a windows file system, with 2 drives C: and D:
 		</p>
-		<demo-snippet>
-			<template>
-				<dom-bind id="demo1">
-					<template is="dom-bind">
-						<iron-ajax url="data/adminFiles.json" handle-as="json" last-response="{{ treeData1 }}" auto="[[ doRequest ]]">
-					</iron-ajax>
-					<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node"
-						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]"
-					></cosmoz-treenode-button-view>
+<!--		<demo-snippet>-->
+<!--			<template>-->
+<!--				<dom-bind id="demo1">-->
+<!--					<template is="dom-bind">-->
+<!--						<iron-ajax url="data/adminFiles.json" handle-as="json" last-response="{{ treeData1 }}" auto="[[ doRequest ]]">-->
+<!--					</iron-ajax>-->
+<!--					<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node"-->
+<!--						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]"-->
+<!--					></cosmoz-treenode-button-view>-->
+<!--					<cosmoz-treenode-button-view-new id="navigator2" button-text-placeholder="Click to select a node"-->
+<!--						node-path="{{ path1 }}" selected-node="{{ selectedNode1 }}" tree="[[ getTree(treeData1) ]]"-->
+<!--					></cosmoz-treenode-button-view-new>-->
 						<cosmoz-treenode-nav></cosmoz-treenode-nav>
-				</template>
-			</dom-bind>
-		</template>
-	</demo-snippet>
+<!--				</template>-->
+<!--			</dom-bind>-->
+<!--		</template>-->
+<!--	</demo-snippet>-->
 	</div>
 
 	<div class="vertical-section-container">
@@ -57,9 +56,9 @@
 					<template is="dom-bind">
 						<iron-ajax url="data/johnFiles.json" handle-as="json" last-response="{{ treeData2 }}" auto="[[ doRequest ]]">
 						</iron-ajax>
-						<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node" node-path="{{ path2 }}" selected-node="{{ selectedNode2 }}"
-								tree="[[ getTree(treeData2) ]]" multi-selection
-						></cosmoz-treenode-button-view>
+<!--						<cosmoz-treenode-button-view id="navigator" button-text-placeholder="Click to select a node" node-path="{{ path2 }}" selected-node="{{ selectedNode2 }}"-->
+<!--								tree="[[ getTree(treeData2) ]]" multi-selection-->
+<!--						></cosmoz-treenode-button-view>-->
 					</template>
 				</dom-bind>
 			</template>
@@ -67,23 +66,23 @@
 	</div>
 
 	<script type="module">
-		import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
-
-		const getTree = data => {
-				if (data) {
-					return new DefaultTree(data);
-				}
-			},
-			initTemplate = id => {
-				let tpl = document.getElementById(id);
-				tpl = !tpl.set ? tpl.firstElementChild : tpl;
-				tpl.getTree = getTree;
-				tpl.set('doRequest', true);
-			};
-
-		setTimeout(() => {
-			initTemplate('demo1');
-			initTemplate('demo2');
-		});
+		// import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
+		//
+		// const getTree = data => {
+		// 		if (data) {
+		// 			return new DefaultTree(data);
+		// 		}
+		// 	},
+		// 	initTemplate = id => {
+		// 		let tpl = document.getElementById(id);
+		// 		tpl = !tpl.set ? tpl.firstElementChild : tpl;
+		// 		tpl.getTree = getTree;
+		// 		tpl.set('doRequest', true);
+		// 	};
+		//
+		// setTimeout(() => {
+		// 	initTemplate('demo1');
+		// 	initTemplate('demo2');
+		// });
 	</script>
 </body></html>

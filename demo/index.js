@@ -6,8 +6,6 @@ const App = () => {
 	return html`
 		<cosmoz-treenode-button-view-next .multiSelection=${ false }>
 		</cosmoz-treenode-button-view-next>
-<!--		<cosmoz-treenode-button-view-next .multiSelection=${ true }>-->
-<!--		</cosmoz-treenode-button-view-next>-->
 		`;
 };
 

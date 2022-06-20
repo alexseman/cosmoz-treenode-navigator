@@ -1,11 +1,13 @@
 import { component, useRef } from 'haunted';
 import { html } from 'lit-html';
+import { ref } from 'lit-html/directives/ref.js';
+import './cosmoz-treenode-navigator-next';
 
 import '@neovici/cosmoz-dialog';
 
-const CosmozTreenodeButtonViewNext = ({ multiSelection, dialogText }) => {
-
-	const dialogTreeRef = useRef(null),
+const CosmozTreenodeButtonViewNext = ({ multiSelection }) => {
+	const
+		dialogTreeRef = useRef(null),
 		nodesOnNodePath = '',
 		getButtonTextPlaceholder = () => {
 			return multiSelection ? 'Select a node' : 'No selection made';
@@ -60,17 +62,17 @@ const CosmozTreenodeButtonViewNext = ({ multiSelection, dialogText }) => {
 			<!--TODO: Add button to reset-->
 			<!--TODO: Add chips-->
 		</div>
-
-		<cosmoz-dialog  class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
+		<cosmoz-dialog ${ ref(el => dialogTreeRef.current = el) } class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
 			<template>
-				<h2>${ dialogText }</h2>
-				<cosmoz-treenode-navigator id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
-										   on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
-										   search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
-										   search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
-										   on-node-dblclicked="_selectNodeAndCloseDialog">
-					<slot></slot>
-				</cosmoz-treenode-navigator>
+		  	<h2>Search or navigate to chosen destination</h2>
+				<cosmoz-treenode-navigator-next
+								id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
+										on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
+										search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
+										search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
+										on-node-dblclicked="_selectNodeAndCloseDialog">
+			<slot></slot>
+		</cosmoz-treenode-navigator-next>
 			</template>
 		</cosmoz-dialog>
 		`;
