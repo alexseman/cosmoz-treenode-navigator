@@ -1,12 +1,17 @@
-import { component, useRef } from 'haunted';
+import { component, useRef, useState } from 'haunted';
 import { html } from 'lit-html';
 import { ref } from 'lit-html/directives/ref.js';
 import './cosmoz-treenode-navigator-next';
 
 import '@neovici/cosmoz-dialog';
 
+
 const CosmozTreenodeButtonViewNext = ({ multiSelection }) => {
 	const
+		[highlightedNodePath, setHighlightedNodePath] = useState(null),
+		[nodePath, setNodePath] = useState(''),
+		[selectedNode, setSelectedNode] = useState({}),
+		[selectedNodes, setSelectedNodes] = useState([]),
 		dialogTreeRef = useRef(null),
 		nodesOnNodePath = '',
 		getButtonTextPlaceholder = () => {
@@ -22,6 +27,18 @@ const CosmozTreenodeButtonViewNext = ({ multiSelection }) => {
 		},
 		openDialogTree = () => {
 			dialogTreeRef.current.open();
+		},
+		selectNode = () => {
+			console.log('select')
+			// nodePath selects the node, without it no selectedNode
+			setNodePath(highlightedNodePath);
+			if (multiSelection) {
+				if (!selectedNodes.some(node => node.pathLocator === highlightedNodePath)) {
+					setSelectedNode(current => [...current, selectedNode]);
+				}
+				setNodePath('');
+				setSelectedNode({});
+			}
 		};
 
 
@@ -71,8 +88,16 @@ const CosmozTreenodeButtonViewNext = ({ multiSelection }) => {
 										search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
 										search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
 										on-node-dblclicked="_selectNodeAndCloseDialog">
-			<slot></slot>
-		</cosmoz-treenode-navigator-next>
+					<slot></slot>
+				</cosmoz-treenode-navigator-next>
+					<div class="buttons">
+						<button type="button"
+					dialog-confirm
+					autofocus
+										@click=${ selectNode() }
+										?disabled="${ !highlightedNodePath }">Select</button>
+						<button type="button" dialog-dismiss>Cancel</button>
+					</div>
 			</template>
 		</cosmoz-dialog>
 		`;
