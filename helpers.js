@@ -23,7 +23,8 @@ const tree = new DefaultTree(basicTree),
 				name: node[tree.searchProperty],
 				path,
 				children: node[tree.childProperty],
-				parentSectionName: tree.getPathString(parentPath, tree.searchProperty)
+				parentSectionName: tree.getPathString(parentPath, tree.searchProperty),
+				id: node.id
 			};
 		});
 	},
@@ -67,11 +68,24 @@ const tree = new DefaultTree(basicTree),
 			.sort(sortFunc);
 	},
 	computeRowClass = (classes, selected) => {
-		console.log(selected)
 		return selected ? classes + ' selected' : classes;
+	},
+	onNodeDblClicked = event => {
+		dispatchEvent(new CustomEvent('node-dblclicked', {
+			composed: true,
+			bubbles: false,
+			detail: {
+				model: event.model
+			}
+		}));
 	};
 
 export {
-	hasChildren, computeSearching,
-	normalizeNodes, renderLevel, computeDataPlane, computeRowClass
+	hasChildren,
+	computeSearching,
+	normalizeNodes,
+	renderLevel,
+	computeDataPlane,
+	computeRowClass,
+	onNodeDblClicked
 };

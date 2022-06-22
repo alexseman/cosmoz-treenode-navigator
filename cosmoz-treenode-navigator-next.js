@@ -3,7 +3,7 @@ import { html } from 'lit-html';
 
 import '@neovici/cosmoz-input';
 import '@neovici/cosmoz-autocomplete';
-import { computeDataPlane, computeRowClass, computeSearching, hasChildren, normalizeNodes, renderLevel } from './helpers';
+import { computeDataPlane, computeRowClass, computeSearching, hasChildren, normalizeNodes, onNodeDblClicked, renderLevel } from './helpers';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './test/data/basicTree';
 
@@ -102,50 +102,54 @@ const TreenodeNavigatorNext = () => {
 	}, [searchValue]);
 
 	return html`
-		<style>
+	  <style>
+		  :host {
+			  --cosmoz-treenode-navigator-select-node-icon-color: var(--primary-color, white);
+			  --cosmoz-treenode-navigator-list-item-focused-color: #f0f8ff;
+		  }
 
-			#header {
-				margin: 0 16px;
-			}
+		  #header {
+			  margin: 0 16px;
+		  }
 
-			#header a {
-				text-decoration: none;
-				color: inherit;
-			}
+		  #header a {
+			  text-decoration: none;
+			  color: inherit;
+		  }
 
-			.icon {
-				display: inline-block;
-				position: relative;
-				padding: 8px;
-				outline: none;
-				user-select: none;
-				cursor: pointer;
-				z-index: 0;
-				line-height: 1;
-				width: 40px;
-				height: 40px;
-				box-sizing: border-box;
-			}
+		  .icon {
+			  display: inline-block;
+			  position: relative;
+			  padding: 8px;
+			  outline: none;
+			  user-select: none;
+			  cursor: pointer;
+			  z-index: 0;
+			  line-height: 1;
+			  width: 40px;
+			  height: 40px;
+			  box-sizing: border-box;
+		  }
 
-			.path {
-				display: flex;
-				align-items: center;
-				flex-wrap: wrap;
-			}
+		  .path {
+			  display: flex;
+			  align-items: center;
+			  flex-wrap: wrap;
+		  }
 
-			.slash {
-				margin: 0 2px;
-			}
+		  .slash {
+			  margin: 0 2px;
+		  }
 
-			.pointer {
-				cursor: pointer;
-			}
+		  .pointer {
+			  cursor: pointer;
+		  }
 
-			cosmoz-listbox {
-				width: 100%;
-				position: static;
-			}
-		</style>
+		  cosmoz-listbox {
+			  width: 100%;
+			  position: static;
+		  }
+	  </style>
 		<div id="header">
 			<h3 class="path">
 					<span class="icon" @click=${ openNode }>
@@ -171,20 +175,14 @@ const TreenodeNavigatorNext = () => {
 		<cosmoz-listbox
 				.query="${ searchValue }"
 				.items="${ computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree) }"
-				.textual=${ (node, index) => html`
-						<style>
-
-				:host {
-					--cosmoz-treenode-navigator-select-node-icon-color: var(--primary-color, white);
-					--cosmoz-treenode-navigator-list-item-focused-color: #f0f8ff;
-				}
-
+		.textual=${ (node, index) => html`
+			<style>
 				.item {
-						padding: 0;
+					padding: 0;
 				}
 
 				.item[data-index] {
-			background: transparent;
+					background: transparent;
 				}
 
 				.node-item {
@@ -197,58 +195,52 @@ const TreenodeNavigatorNext = () => {
 					display: flex;
 					align-items: center;
 				}
-		.icon {
-			display: inline-block;
-			position: relative;
-			padding: 8px;
-			outline: none;
-			user-select: none;
-			cursor: pointer;
-			z-index: 0;
-			line-height: 1;
-			width: 40px;
-			height: 40px;
-			box-sizing: border-box;
-		}
+
+				.icon {
+					display: inline-block;
+					position: relative;
+					padding: 8px;
+					outline: none;
+					user-select: none;
+					cursor: pointer;
+					z-index: 0;
+					line-height: 1;
+					width: 40px;
+					height: 40px;
+					box-sizing: border-box;
+				}
 
 				.node-item.selected {
 					transition: background-color 0.2s ease-out;
-					background-color: var( --cosmoz-listbox-active-color, var(--cosmoz-selection-color, rgba(58, 145, 226, 0.1)) );
+					background-color: var(--cosmoz-listbox-active-color, var(--cosmoz-selection-color, rgba(58, 145, 226, 0.1)));
 				}
 
 				.node-item.selected .icon svg {
 					transition: color 0.8s ease-out;
-
 					fill: var(--cosmoz-treenode-navigator-select-node-icon-color);
 				}
-						</style>
+			</style>
 					<div>
-												${ renderSection(computeSearching(searchValue, searchMinLength), index, dataPlane, node.parentSectionName)
-		? html`
-																			<div class="section">
-																					${ node.parentSectionName }
-																			</div>`
+							${ renderSection(index, dataPlane, node.parentSectionName)
+		? html`<div class="section">${ node.parentSectionName }</div>`
 		: '' }
-						<div class="${ computeRowClass('node-item pointer', node.name === highlightedNode?.name) }">
-							<div style="flex: auto" on-dblclick="_onNodeDblClicked">${ node.name }</div>
-								${ hasChildren(node)
-		? html`
-														<span class="icon" @click="${ () => openNode(node) }">
+						<div class="${ computeRowClass('node-item pointer', node.id === highlightedNode?.id) }">
+							<div style="flex: auto" @dblclick="${ onNodeDblClicked }"">${ node.name }</div>
+							${ hasChildren(node)
+		? html`<span class="icon" @click="${ () => openNode(node) }">
 							<svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" focusable="false"
 								 style="pointer-events: none; display: block; width: 100%; height: 100%;">
 								<g>
 									<path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"></path>
 								</g>
 							</svg>
-												</span>`
+						</span>`
 		: '' }
-
-							<!--													<paper-icon-button hidden$="[[ !hasChildren(node) ]]" icon="icons:arrow-forward" data-path$="[[ node.path ]]" on-click="openNode">-->
-							<!--													</paper-icon-button>-->
 						</div>
-				` }
+		` }
 		.onSelect=${ item => setHighlightedNode(item) }
 		></cosmoz-listbox>
 		`;
 };
+
 customElements.define('cosmoz-treenode-navigator-next', component(TreenodeNavigatorNext));
