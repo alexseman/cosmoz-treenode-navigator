@@ -69,6 +69,11 @@ const TreenodeNavigatorNext = () => {
 				setOpenNodePath(clickedNode.path);
 				setSearchValue('');
 			}
+			if (!clickedNode) {
+				setOpenNodePath('');
+				setSearchValue('');
+				setHighlightedNode(null);
+			}
 		},
 		renderSection = (index, dataPlane, parentSectionName) => {
 			if (!computeSearching(searchValue, searchMinLength) || index == null || dataPlane == null || index >= dataPlane.length || parentSectionName == null) {
@@ -96,10 +101,6 @@ const TreenodeNavigatorNext = () => {
 	useEffect(() => {
 		setHighlightedNodePath(openNodePath);
 	}, [highlightedNode]);
-
-	useEffect(() => {
-		computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
-	}, [searchValue]);
 
 	return html`
 	  <style>
@@ -152,7 +153,7 @@ const TreenodeNavigatorNext = () => {
 	  </style>
 		<div id="header">
 			<h3 class="path">
-					<span class="icon" @click=${ openNode }>
+					<span class="icon" @click=${ () => openNode() }>
 							<svg viewBox="0 0 24 24"
 				   preserveAspectRatio="xMidYMid meet"
 				   focusable="false"
@@ -175,7 +176,7 @@ const TreenodeNavigatorNext = () => {
 		<cosmoz-listbox
 				.query="${ searchValue }"
 				.items="${ computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree) }"
-		.textual=${ (node, index) => html`
+				.textual=${ (node, index) => html`
 			<style>
 				.item {
 					padding: 0;
