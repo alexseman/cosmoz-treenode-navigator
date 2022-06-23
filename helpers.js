@@ -1,5 +1,6 @@
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './test/data/basicTree';
+import { tagged as css } from '@neovici/cosmoz-utils/lib/tagged';
 
 const tree = new DefaultTree(basicTree),
 	hasChildren = node => {
@@ -24,7 +25,8 @@ const tree = new DefaultTree(basicTree),
 				path,
 				children: node[tree.childProperty],
 				parentSectionName: tree.getPathString(parentPath, tree.searchProperty),
-				id: node.id
+				id: node.id,
+				pathLocator: node.pathLocator
 			};
 		});
 	},
@@ -78,7 +80,69 @@ const tree = new DefaultTree(basicTree),
 				model: event.model
 			}
 		}));
-	};
+	},
+	getNodeName = node => {
+		return node[tree.searchProperty];
+	},
+	showGlobalSearchBtn = (searching, openNodeLevelPath) => {
+		return searching && openNodeLevelPath !== '';
+	},
+	nodeStyles = css`
+	  .section {
+			background-color: #f5f5f5;
+			padding: 5px;
+	  }
+
+		.pointer {
+			cursor: pointer;
+		}
+
+	  .item {
+			padding: 0;
+	  }
+
+	  .item[data-index] {
+			background: transparent;
+	  }
+
+	  .node-item {
+			align-items: center;
+			display: flex;
+			font-family: 'Roboto', 'Noto', sans-serif;
+			font-size: 16px;
+			font-weight: 400;
+			height: 28px;
+			line-height: 24px;
+			padding: 6px 12px;
+	  }
+
+	  .node-item-wrapper {
+			width: 100%;
+	  }
+
+	  .icon {
+			box-sizing: border-box;
+			cursor: pointer;
+			display: inline-block;
+			height: 40px;
+			line-height: 1;
+			outline: none;
+			padding: 8px;
+			position: relative;
+			user-select: none;
+			width: 40px;
+			z-index: 0;
+	  }
+
+	  .node-item.selected {
+			background-color: var(--cosmoz-listbox-active-color, var(--cosmoz-selection-color, rgba(58, 145, 226, 0.1)));
+			transition: background-color 0.2s ease-out;
+	  }
+
+	  .node-item.selected .icon svg {
+			fill: var(--cosmoz-treenode-navigator-select-node-icon-color);
+			transition: color 0.8s ease-out;
+	  }`;
 
 export {
 	hasChildren,
@@ -87,5 +151,8 @@ export {
 	renderLevel,
 	computeDataPlane,
 	computeRowClass,
-	onNodeDblClicked
+	onNodeDblClicked,
+	getNodeName,
+	showGlobalSearchBtn,
+	nodeStyles
 };

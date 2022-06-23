@@ -3,7 +3,17 @@ import { html } from 'lit-html';
 
 import '@neovici/cosmoz-input';
 import '@neovici/cosmoz-autocomplete';
-import { computeDataPlane, computeRowClass, computeSearching, hasChildren, normalizeNodes, onNodeDblClicked, renderLevel } from './helpers';
+import {
+	computeDataPlane,
+	computeRowClass,
+	computeSearching,
+	getNodeName,
+	hasChildren,
+	nodeStyles,
+	normalizeNodes,
+	onNodeDblClicked,
+	renderLevel, showGlobalSearchBtn
+} from './helpers';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './test/data/basicTree';
 
@@ -75,14 +85,15 @@ const TreenodeNavigatorNext = () => {
 				setHighlightedNode(null);
 			}
 		},
-		renderSection = (index, dataPlane, parentSectionName) => {
-			if (!computeSearching(searchValue, searchMinLength) || index == null || dataPlane == null || index >= dataPlane.length || parentSectionName == null) {
+		renderSection = (index, parentSectionName) => {
+			const _dataPlane = computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
+			if (!computeSearching(searchValue, searchMinLength) || index == null || _dataPlane == null || index >= _dataPlane.length || parentSectionName == null) {
 				return false;
 			}
 			if (index === 0) {
 				return true;
 			}
-			const prevItem = dataPlane[index - 1];
+			const prevItem = _dataPlane[index - 1];
 			return prevItem.parentSectionName !== parentSectionName;
 		};
 
@@ -147,9 +158,17 @@ const TreenodeNavigatorNext = () => {
 		  }
 
 		  cosmoz-listbox {
-			  width: 100%;
+					width: 100%;
 			  position: static;
 		  }
+			.btn-ghost {
+					background: transparent;
+			border: none;
+			cursor: pointer;
+			margin: 0 0.29em;
+			padding: 0.7em 0.57em;
+			text-transform: uppercase;
+			}
 	  </style>
 		<div id="header">
 			<h3 class="path">
@@ -164,7 +183,7 @@ const TreenodeNavigatorNext = () => {
 				${ nodesOnOpenNodePath.map(node => {
 		return html`
 						<span class="slash">/</span>
-						<span class="pointer" tabindex="0" @click="${ () => openNode(node) }">${ node.path }</span>`;
+						<span class="pointer" tabindex="0" @click="${ () => openNode(node) }">${ getNodeName(node) }</span>`;
 	}) }
 			</h3>
 			<cosmoz-input tabindex="0"
@@ -176,56 +195,15 @@ const TreenodeNavigatorNext = () => {
 		<cosmoz-listbox
 				.query="${ searchValue }"
 				.items="${ computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree) }"
-				.textual=${ (node, index) => html`
-			<style>
-				.item {
-					padding: 0;
-				}
-
-				.item[data-index] {
-					background: transparent;
-				}
-
-				.node-item {
-					font-family: 'Roboto', 'Noto', sans-serif;
-					padding: 6px 12px;
-					font-size: 16px;
-					font-weight: 400;
-					line-height: 24px;
-					height: 28px;
-					display: flex;
-					align-items: center;
-				}
-
-				.icon {
-					display: inline-block;
-					position: relative;
-					padding: 8px;
-					outline: none;
-					user-select: none;
-					cursor: pointer;
-					z-index: 0;
-					line-height: 1;
-					width: 40px;
-					height: 40px;
-					box-sizing: border-box;
-				}
-
-				.node-item.selected {
-					transition: background-color 0.2s ease-out;
-					background-color: var(--cosmoz-listbox-active-color, var(--cosmoz-selection-color, rgba(58, 145, 226, 0.1)));
-				}
-
-				.node-item.selected .icon svg {
-					transition: color 0.8s ease-out;
-					fill: var(--cosmoz-treenode-navigator-select-node-icon-color);
-				}
-			</style>
-					<div>
-							${ renderSection(index, dataPlane, node.parentSectionName)
+				.textual="${ item => item.name }"
+				.itemRenderer=${ (node, index) => html`
+					<div class="node-item-wrapper">
+			  		<style>${ nodeStyles }</style>
+							${ renderSection(index, node.parentSectionName)
 		? html`<div class="section">${ node.parentSectionName }</div>`
 		: '' }
-						<div class="${ computeRowClass('node-item pointer', node.id === highlightedNode?.id) }">
+						<div class="${ computeRowClass('node-item pointer', node.id === highlightedNode?.id) }"
+								 @click="${ () => setHighlightedNode(node) }">
 							<div style="flex: auto" @dblclick="${ onNodeDblClicked }"">${ node.name }</div>
 							${ hasChildren(node)
 		? html`<span class="icon" @click="${ () => openNode(node) }">
@@ -239,8 +217,13 @@ const TreenodeNavigatorNext = () => {
 		: '' }
 						</div>
 		` }
-		.onSelect=${ item => setHighlightedNode(item) }
 		></cosmoz-listbox>
+		${ showGlobalSearchBtn(computeSearching(searchValue, searchMinLength), openNodePath)
+		? html`
+				<button class="btn-ghost" @click="${ () => setOpenNodePath('') }">
+						${ searchGlobalPlaceholder }
+				</button>`
+		: '' }
 		`;
 };
 
