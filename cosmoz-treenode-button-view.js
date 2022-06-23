@@ -160,7 +160,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			* Placeholder for the search field
 			*/
 			searchPlaceholder: {
-				type: String
+				type: String,
+				value: 'Search'
 			},
 			/*
 			* Placeholder for button text
@@ -193,7 +194,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			* to suggest a search on the entire tree
 			*/
 			searchGlobalPlaceholder: {
-				type: String
+				type: String,
+				value: 'Click to search again but globally.'
 			},
 			/*
 			* Settable text for dialog title.
@@ -207,7 +209,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			* starts.
 			*/
 			searchMinLength: {
-				type: Number
+				type: Number,
+				value: 1
 			},
 			/*
 			* Path string of highlighted (focused) node

@@ -87,6 +87,25 @@ const tree = new DefaultTree(basicTree),
 	showGlobalSearchBtn = (searching, openNodeLevelPath) => {
 		return searching && openNodeLevelPath !== '';
 	},
+	getTreePathParts = (pathLocator, tree) => {
+		if (!tree || !pathLocator) {
+			return [];
+		}
+		return normalizeNodes(tree.getPathNodes(pathLocator));
+	},
+	getNode = (pathLocator, tree) => {
+		if (!tree || !pathLocator) {
+			return null;
+		}
+
+		const node = tree.getNodeByPathLocator(pathLocator);
+		let nodes;
+
+		if (!node) {
+			nodes = tree.getPathNodes(pathLocator).filter(n => n != null);
+		}
+		return nodes && nodes.length > 0 ? nodes.pop() : node;
+	},
 	nodeStyles = css`
 	  .section {
 			background-color: #f5f5f5;
@@ -154,5 +173,7 @@ export {
 	onNodeDblClicked,
 	getNodeName,
 	showGlobalSearchBtn,
+	getTreePathParts,
+	getNode,
 	nodeStyles
 };
