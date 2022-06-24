@@ -78,7 +78,7 @@ const TreenodeNavigatorNext = (
 						*/
 		dataPlane = useMemo(() => {
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
-		}, [tree]),
+		}, [tree, openNodePath]),
 		openNode = clickedNode => {
 			if (hasChildren(clickedNode)) {
 				setOpenNodePath(clickedNode.path);
@@ -89,6 +89,10 @@ const TreenodeNavigatorNext = (
 				setSearchValue('');
 				setHighlightedNode(null);
 			}
+
+			setNodePath(openNodePath);
+			setNodesOnNodePath(getTreePathParts(nodePath, tree));
+			setSelectedNode(getNode(nodePath, tree));
 		},
 		renderSection = (index, parentSectionName) => {
 			const _dataPlane = computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
@@ -120,11 +124,8 @@ const TreenodeNavigatorNext = (
 			return;
 		}
 		setHighlightedNodePath(highlightedNode.path);
-		setOpenNodePath(highlightedNode.path);
-		setNodePath(openNodePath);
-		setNodesOnNodePath(getTreePathParts(nodePath, tree));
-		setSelectedNode(getNode(nodePath, tree));
 	}, [highlightedNode]);
+
 
 	useNotifyProperty('selectedNode', selectedNode);
 	useNotifyProperty('nodePath', nodePath);
@@ -225,10 +226,9 @@ const TreenodeNavigatorNext = (
 												<div class="section">${ node.parentSectionName }</div>`
 		: '' }
 									<div class="${ computeRowClass('node-item pointer', node === highlightedNode) }"
-										 @click="${ () => setHighlightedNode(node) }">
-										<div style="flex: auto" @dblclick="${ onNodeDblClicked }"
-											">${ node.name }
-									</div>
+											 @click="${ () => setHighlightedNode(node) }"
+											 @dblclick="${ onNodeDblClicked }">
+										<div style="flex: auto">${ node.name }</div>
 									${ hasChildren(node)
 		? html`
 												<span class="icon" @click="${ () => openNode(node) }">

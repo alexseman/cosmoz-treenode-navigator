@@ -73,9 +73,7 @@ const tree = new DefaultTree(basicTree),
 		return selected ? classes + ' selected' : classes;
 	},
 	onNodeDblClicked = event => {
-		dispatchEvent(new CustomEvent('node-dblclicked', {
-			composed: true,
-			bubbles: false,
+		dispatchEvent(new CustomEvent('on-node-dblclicked-changed', {
 			detail: {
 				model: event.model
 			}
