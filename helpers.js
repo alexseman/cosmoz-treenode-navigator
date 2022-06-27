@@ -3,12 +3,29 @@ import basicTree from './test/data/basicTree';
 import { tagged as css } from '@neovici/cosmoz-utils/lib/tagged';
 
 const tree = new DefaultTree(basicTree),
+	/**
+	 * Returns true if a given node has children
+	 * @param {Object} node - The node
+	 * @return {Boolean} - True if node has children
+	 */
 	hasChildren = node => {
 		return tree.hasChildren(node);
 	},
+	/**
+	 * Returns true, if a search string is eligable to trigger a search
+	 * @param {String} value - The search string
+	 * @param {Number} searchMinLength - The minimum length of value to be valid
+	 * @return {Boolean} - If a search should be triggered
+	 */
 	computeSearching = (value, searchMinLength) => {
 		return value && value.length >= searchMinLength && value !== '';
 	},
+	/**
+	 * Normalizes and returns an Array of nodes
+	 * with the properties name, path, parentSectionName, children
+	 * @param {Array} nodes - The input nodes
+	 * @return {Array} - The normalized nodes
+	 */
 	normalizeNodes = nodes => {
 		if (!Array.isArray(nodes)) {
 			return [];
@@ -30,6 +47,14 @@ const tree = new DefaultTree(basicTree),
 			};
 		});
 	},
+	/**
+	 * Returns the found nodes based on a search string and a given tree to be searched
+	 * @param {Boolean} searching - If true, a search should be executed
+	 * @param {String} searchString - The search string
+	 * @param {Array} renderedLevel - The node list on which the search should be executed
+	 * @param {Tree} tree - The main tree
+	 * @return {Array} - The found nodes
+	 */
 	computeDataPlane = (searching, searchString, renderedLevel, tree) => {
 		if (searching && tree) {
 			const results = tree.searchNodes(searchString, renderedLevel, false);
@@ -37,6 +62,13 @@ const tree = new DefaultTree(basicTree),
 		}
 		return renderedLevel;
 	},
+	/**
+	 * Returns a node array with the children of a node on the given path
+	 * If the node doesn't have children, the node gets returned
+	 * @param {String} pathLocator - The separated address parts of a node
+	 * @param {Tree} tree - The main tree
+	 * @return {Array} - Nodes
+	 */
 	renderLevel = (pathLocator, tree) => {
 		if (!tree) {
 			return;
@@ -69,28 +101,64 @@ const tree = new DefaultTree(basicTree),
 		return normalizeNodes(level)
 			.sort(sortFunc);
 	},
+	/**
+	 * Returns the classes of a row based its selection state
+	 * @param {String} classes - The default classes
+	 * @param {Boolean} selected - If the row is currently selected
+	 * @return {String} - The CSS classes
+	 */
 	computeRowClass = (classes, selected) => {
 		return selected ? classes + ' selected' : classes;
 	},
+	/**
+	 * Selects the doubled clicked node and dispatches an node-dblclicked event.
+	 * @param {Event} event The triggering event
+	 * @return {undefined}
+	 */
 	onNodeDblClicked = event => {
-		dispatchEvent(new CustomEvent('on-node-dblclicked-changed', {
+		dispatchEvent(new CustomEvent('node-dblclicked', {
 			detail: {
 				model: event.model
 			}
 		}));
 	},
+	/**
+	 * Returns the name of a given node
+	 * @param {Object} node - The node
+	 * @return {String} - The name
+	 */
 	getNodeName = node => {
 		return node[tree.searchProperty];
 	},
+	/**
+	 * Returns true, if the button should be visible
+	 * @param {Boolean} searching - If a search is currently executed
+	 * @param {String} openNodeLevelPath - The open node level
+	 * @return {Boolean} - The visibility of the button
+	 */
 	showGlobalSearchBtn = (searching, openNodeLevelPath) => {
 		return searching && openNodeLevelPath !== '';
 	},
+	/**
+	 * Returns the nodes on a path specified by a given path locator
+	 * @param {String} pathLocator - The separated address parts of a node
+	 * @param {Tree} tree - The main tree
+	 * @return {Array} - The found nodes or empty array
+	 */
 	getTreePathParts = (pathLocator, tree) => {
 		if (!tree || !pathLocator) {
 			return [];
 		}
 		return normalizeNodes(tree.getPathNodes(pathLocator));
 	},
+	/**
+	 * Returns a node based on a given path locator.
+	 * If pathLocator is empty or not defined, null gets returned.
+	 * If pathLocator is only partly valid, the last valid node gets returned.
+	 * @param {String} pathLocator - The separated address parts of a node
+	 * @param {Tree} tree - The main tree
+	 * @return {Object} - The found node
+	 */
 	getNode = (pathLocator, tree) => {
 		if (!tree || !pathLocator) {
 			return null;

@@ -20,65 +20,70 @@ import {
 
 const TreenodeNavigatorNext = (
 	{
-	/*
-			* The main node structure
-			*/
+		/**
+		 * The main node structure
+		 */
 		tree,
-		/*
-						* Placeholder for search field.
-						*/
+		/**
+		 * Placeholder for search field.
+		 */
 		searchPlaceholder,
-		/*
-						* Text displayed when local search has finished
-						* to suggest a search on the entire tree
-						*/
+		/**
+		 * Text displayed when local search has finished
+		 * to suggest a search on the entire tree
+		 */
 		searchGlobalPlaceholder,
-		/*
-						* Minimum length of searchValue to trigger a search
-						*/
+		/**
+		 * Minimum length of searchValue to trigger a search
+		 */
 		searchMinLength
 	}) => {
 	const
-		/*
+		/**
 		* The selected node
 		*/
 		[selectedNode, setSelectedNode] = useState(),
-		/*
-						* The path of the selected node
-						* This is the node which was highlighted and after the user tapped the select button
-						*/
+		/**
+		 * The path of the selected node
+		 * This is the node which was highlighted and after the user tapped the select button
+		 */
 		[nodePath, setNodePath] = useState(),
-		/*
-						* The nodes on the path of the selected node
-						*/
+		/**
+		 * The nodes on the path of the selected node
+		 */
 		[nodesOnNodePath, setNodesOnNodePath] = useState(),
-		/*
-						* The path of the opened node
-						*/
+		/**
+		 * The path of the opened node
+		 */
 		[openNodePath, setOpenNodePath] = useState(''),
-		/*
-						* The nodes on the path of the opened node
-						*/
+		/**
+		 * The nodes on the path of the opened node
+		 */
 		[nodesOnOpenNodePath, setNodesOnOpenNodePath] = useState([]),
-		/*
-						* The highlighted (focused) node
-						* This is the node which is currently selected in the list
-						*/
+		/**
+		 * The highlighted (focused) node
+		 * This is the node which is currently selected in the list
+		 */
 		[highlightedNode, setHighlightedNode] = useState(),
-		/*
-						* The path string of highlighted (focused) node
-						*/
+		/**
+		 * The path string of highlighted (focused) node
+		 */
 		[highlightedNodePath, setHighlightedNodePath] = useState(),
-		/*
-						* The search string
-						*/
+		/**
+		 * The search string
+		 */
 		[searchValue, setSearchValue] = useState(''),
-		/*
-						* The currently displayed node list
-						*/
+		/**
+		 * The currently displayed node list
+		 */
 		dataPlane = useMemo(() => {
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
 		}, [tree, openNodePath]),
+		/**
+		 * Opens a node (renderLevel) based on a given path
+		 * @param {object} clickedNode - The clicked node
+		 * @return {undefined}
+		 */
 		openNode = clickedNode => {
 			if (hasChildren(clickedNode)) {
 				setOpenNodePath(clickedNode.path);
@@ -94,6 +99,12 @@ const TreenodeNavigatorNext = (
 			setNodesOnNodePath(getTreePathParts(nodePath, tree));
 			setSelectedNode(getNode(nodePath, tree));
 		},
+		/**
+		 * Returns true, if the path of a node should be visible in the view
+		 * @param {Number} index - The node's current index in the list
+		 * @param {Object} parentSectionName - The nodes current parent section name
+		 * @return {Boolean} - If the path should be visible
+		 */
 		renderSection = (index, parentSectionName) => {
 			const _dataPlane = computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
 			if (!computeSearching(searchValue, searchMinLength) || index == null || _dataPlane == null || index >= _dataPlane.length || parentSectionName == null) {
@@ -227,7 +238,7 @@ const TreenodeNavigatorNext = (
 		: '' }
 									<div class="${ computeRowClass('node-item pointer', node === highlightedNode) }"
 											 @click="${ () => setHighlightedNode(node) }"
-											 @dblclick="${ onNodeDblClicked }">
+											 @dblclick="${ e => onNodeDblClicked(e) }">
 										<div style="flex: auto">${ node.name }</div>
 									${ hasChildren(node)
 		? html`
