@@ -104,19 +104,28 @@ const tree = new DefaultTree(basicTree),
 	/**
 	 * Returns the classes of a row based its selection state
 	 * @param {String} classes - The default classes
-	 * @param {Boolean} selected - If the row is currently selected
+	 * @param {object} node - Node to check
+	 * @param {object} highlightedNode - Currently highlighted node
 	 * @return {String} - The CSS classes
 	 */
-	computeRowClass = (classes, selected) => {
+	computeRowClass = (classes, node, highlightedNode) => {
+		let selected = false;
+		if (highlightedNode) {
+			selected = node === highlightedNode
+							|| (node.id && node.id === highlightedNode.id)
+							|| node.pathLocator === highlightedNode.pathLocator;
+		}
 		return selected ? classes + ' selected' : classes;
 	},
 	/**
 	 * Selects the doubled clicked node and dispatches an node-dblclicked event.
+	 * @param host
 	 * @param {Event} event The triggering event
 	 * @return {undefined}
 	 */
-	onNodeDblClicked = event => {
-		dispatchEvent(new CustomEvent('node-dblclicked', {
+	onNodeDblClicked = (host, event) => {
+			host['node-dblclicked'] = { model: event.model };
+			host.dispatchEvent(new CustomEvent('node-dblclicked', {
 			detail: {
 				model: event.model
 			}

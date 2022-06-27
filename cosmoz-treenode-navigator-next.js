@@ -20,6 +20,7 @@ import {
 
 const TreenodeNavigatorNext = (
 	{
+		host,
 		/**
 		 * The main node structure
 		 */
@@ -78,7 +79,7 @@ const TreenodeNavigatorNext = (
 		 */
 		dataPlane = useMemo(() => {
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
-		}, [tree, openNodePath]),
+		}, [tree, openNodePath, highlightedNode]),
 		/**
 		 * Opens a node (renderLevel) based on a given path
 		 * @param {object} clickedNode - The clicked node
@@ -236,9 +237,9 @@ const TreenodeNavigatorNext = (
 		? html`
 												<div class="section">${ node.parentSectionName }</div>`
 		: '' }
-									<div class="${ computeRowClass('node-item pointer', node === highlightedNode) }"
+									<div class="${ computeRowClass('node-item pointer', node, highlightedNode) }"
 											 @click="${ () => setHighlightedNode(node) }"
-											 @dblclick="${ e => onNodeDblClicked(e) }">
+											 @dblclick="${ e => onNodeDblClicked(host, e) }">
 										<div style="flex: auto">${ node.name }</div>
 									${ hasChildren(node)
 		? html`
