@@ -119,13 +119,12 @@ const tree = new DefaultTree(basicTree),
 	},
 	/**
 	 * Selects the doubled clicked node and dispatches an node-dblclicked event.
-	 * @param host
 	 * @param {Event} event The triggering event
+	 * @param {object} host Host
 	 * @return {undefined}
 	 */
-	onNodeDblClicked = (host, event) => {
-			host['node-dblclicked'] = { model: event.model };
-			host.dispatchEvent(new CustomEvent('node-dblclicked', {
+	onNodeDblClicked = (event, host) => {
+		host.dispatchEvent(new CustomEvent('node-dblclicked', {
 			detail: {
 				model: event.model
 			}

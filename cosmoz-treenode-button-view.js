@@ -303,6 +303,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {void}
 	 */
 	selectNode() {
+			console.log(this.selectedNode)
+			console.log(this.highlightedNodePath)
 		// nodePath selects the node, without it no selectedNode
 		this.nodePath = this.highlightedNodePath;
 		if (this.multiSelection) {

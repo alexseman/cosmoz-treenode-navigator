@@ -18,28 +18,27 @@ import {
 	renderLevel, showGlobalSearchBtn
 } from './helpers';
 
-const TreenodeNavigatorNext = (
-	{
-		host,
-		/**
-		 * The main node structure
-		 */
-		tree,
-		/**
-		 * Placeholder for search field.
-		 */
-		searchPlaceholder,
-		/**
-		 * Text displayed when local search has finished
-		 * to suggest a search on the entire tree
-		 */
-		searchGlobalPlaceholder,
-		/**
-		 * Minimum length of searchValue to trigger a search
-		 */
-		searchMinLength
-	}) => {
-	const
+const TreenodeNavigatorNext = host => {
+	const {
+			/**
+			 * The main node structure
+			 */
+			tree,
+			/**
+			 * Placeholder for search field.
+			 */
+			searchPlaceholder,
+			/**
+			 * Text displayed when local search has finished
+			 * to suggest a search on the entire tree
+			 */
+			searchGlobalPlaceholder,
+			/**
+			 * Minimum length of searchValue to trigger a search
+			 */
+			searchMinLength
+		} = host,
+
 		/**
 		* The selected node
 		*/
@@ -95,10 +94,6 @@ const TreenodeNavigatorNext = (
 				setSearchValue('');
 				setHighlightedNode(null);
 			}
-
-			setNodePath(openNodePath);
-			setNodesOnNodePath(getTreePathParts(nodePath, tree));
-			setSelectedNode(getNode(nodePath, tree));
 		},
 		/**
 		 * Returns true, if the path of a node should be visible in the view
@@ -136,13 +131,16 @@ const TreenodeNavigatorNext = (
 			return;
 		}
 		setHighlightedNodePath(highlightedNode.path);
+		setNodePath(highlightedNode.path);
+		setNodesOnNodePath(getTreePathParts(nodePath, tree));
+		setSelectedNode(getNode(nodePath, tree));
 	}, [highlightedNode]);
 
 
-	useNotifyProperty('selectedNode', selectedNode);
-	useNotifyProperty('nodePath', nodePath);
-	useNotifyProperty('nodesOnNodePath', nodesOnNodePath);
-	useNotifyProperty('highlightedNodePath', highlightedNodePath);
+	useNotifyProperty('selected-node', selectedNode);
+	useNotifyProperty('node-path', nodePath);
+	useNotifyProperty('nodes-on-node-path', nodesOnNodePath);
+	useNotifyProperty('highlighted-node-path', highlightedNodePath);
 
 	return html`
 		<style>
@@ -239,7 +237,7 @@ const TreenodeNavigatorNext = (
 		: '' }
 									<div class="${ computeRowClass('node-item pointer', node, highlightedNode) }"
 											 @click="${ () => setHighlightedNode(node) }"
-											 @dblclick="${ e => onNodeDblClicked(host, e) }">
+											 @dblclick="${ e => onNodeDblClicked(e, host) }">
 										<div style="flex: auto">${ node.name }</div>
 									${ hasChildren(node)
 		? html`
