@@ -1,5 +1,6 @@
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
+import '@polymer/iron-icons/iron-icons';
 
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
@@ -12,6 +13,7 @@ import { Tree } from '@neovici/cosmoz-tree';
 import { translatable } from '@neovici/cosmoz-i18next';
 
 import './cosmoz-treenode-navigator-next';
+import { getNode, getTreePathParts } from './helpers';
 
 /**
 	`cosmoz-treenode-navigator`
@@ -303,10 +305,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {void}
 	 */
 	selectNode() {
-			console.log(this.selectedNode)
-			console.log(this.highlightedNodePath)
 		// nodePath selects the node, without it no selectedNode
+		this.selectedNode = getNode(this.highlightedNodePath, this.tree);
 		this.nodePath = this.highlightedNodePath;
+		this.nodesOnNodePath = getTreePathParts(this.highlightedNodePath, this.tree);
 		if (this.multiSelection) {
 			if (!this.selectedNodes.some(node => node.pathLocator === this.highlightedNodePath)) {
 				this.push('selectedNodes', this.selectedNode);

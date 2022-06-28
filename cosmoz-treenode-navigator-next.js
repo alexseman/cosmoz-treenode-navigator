@@ -3,14 +3,14 @@ import { html } from 'lit-html';
 
 import '@neovici/cosmoz-input';
 import '@neovici/cosmoz-autocomplete';
-import { useNotifyProperty } from '@neovici/cosmoz-utils/lib/hooks/use-notify-property';
+import { notifyProperty } from '@neovici/cosmoz-utils/lib/hooks/use-notify-property';
 
 
 import {
 	computeDataPlane,
 	computeRowClass,
-	computeSearching, getNode,
-	getNodeName, getTreePathParts,
+	computeSearching,
+	getNodeName,
 	hasChildren,
 	nodeStyles,
 	normalizeNodes,
@@ -38,20 +38,6 @@ const TreenodeNavigatorNext = host => {
 			 */
 			searchMinLength
 		} = host,
-
-		/**
-		* The selected node
-		*/
-		[selectedNode, setSelectedNode] = useState(),
-		/**
-		 * The path of the selected node
-		 * This is the node which was highlighted and after the user tapped the select button
-		 */
-		[nodePath, setNodePath] = useState(),
-		/**
-		 * The nodes on the path of the selected node
-		 */
-		[nodesOnNodePath, setNodesOnNodePath] = useState(),
 		/**
 		 * The path of the opened node
 		 */
@@ -66,10 +52,6 @@ const TreenodeNavigatorNext = host => {
 		 */
 		[highlightedNode, setHighlightedNode] = useState(),
 		/**
-		 * The path string of highlighted (focused) node
-		 */
-		[highlightedNodePath, setHighlightedNodePath] = useState(),
-		/**
 		 * The search string
 		 */
 		[searchValue, setSearchValue] = useState(''),
@@ -78,7 +60,7 @@ const TreenodeNavigatorNext = host => {
 		 */
 		dataPlane = useMemo(() => {
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
-		}, [tree, openNodePath, highlightedNode]),
+		}, [tree, openNodePath, highlightedNode, searchValue]),
 		/**
 		 * Opens a node (renderLevel) based on a given path
 		 * @param {object} clickedNode - The clicked node
@@ -116,8 +98,8 @@ const TreenodeNavigatorNext = host => {
 
 	useEffect(() => {
 		if (!openNodePath) {
-			setHighlightedNodePath('');
-			setNodesOnOpenNodePath([]);
+			notifyProperty(host, 'highlightedNodePath', '');
+			notifyProperty(host, 'nodesOnNodePath', []);
 			return;
 		}
 		setNodesOnOpenNodePath(normalizeNodes(tree.getPathNodes(openNodePath)
@@ -126,21 +108,18 @@ const TreenodeNavigatorNext = host => {
 
 
 	useEffect(() => {
-		if (!highlightedNode) {
-			setHighlightedNodePath('');
+		if (!openNodePath) {
+			notifyProperty(host, 'highlightedNodePath', '');
 			return;
 		}
-		setHighlightedNodePath(highlightedNode.path);
-		setNodePath(highlightedNode.path);
-		setNodesOnNodePath(getTreePathParts(nodePath, tree));
-		setSelectedNode(getNode(nodePath, tree));
+		setNodesOnOpenNodePath(normalizeNodes(tree.getPathNodes(openNodePath)
+			.filter(item => item)));
+	}, [openNodePath]);
+
+
+	useEffect(() => {
+		notifyProperty(host, 'highlightedNodePath', !highlightedNode ? '' : highlightedNode.path);
 	}, [highlightedNode]);
-
-
-	useNotifyProperty('selected-node', selectedNode);
-	useNotifyProperty('node-path', nodePath);
-	useNotifyProperty('nodes-on-node-path', nodesOnNodePath);
-	useNotifyProperty('highlighted-node-path', highlightedNodePath);
 
 	return html`
 		<style>
