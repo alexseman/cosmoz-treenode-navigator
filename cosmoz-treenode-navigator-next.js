@@ -9,7 +9,7 @@ import { notifyProperty } from '@neovici/cosmoz-utils/lib/hooks/use-notify-prope
 import {
 	computeDataPlane,
 	computeRowClass,
-	computeSearching,
+	computeSearching, getNode,
 	getNodeName,
 	hasChildren,
 	nodeStyles,
@@ -36,7 +36,8 @@ const TreenodeNavigatorNext = host => {
 			/**
 			 * Minimum length of searchValue to trigger a search
 			 */
-			searchMinLength
+			searchMinLength,
+			nodePath
 		} = host,
 		/**
 		 * The path of the opened node
@@ -59,6 +60,7 @@ const TreenodeNavigatorNext = host => {
 		 * The currently displayed node list
 		 */
 		dataPlane = useMemo(() => {
+			console.log(highlightedNode);
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
 		}, [tree, openNodePath, highlightedNode, searchValue]),
 		/**
@@ -95,7 +97,6 @@ const TreenodeNavigatorNext = host => {
 			return prevItem.parentSectionName !== parentSectionName;
 		};
 
-
 	useEffect(() => {
 		if (!openNodePath) {
 			notifyProperty(host, 'highlightedNodePath', '');
@@ -106,7 +107,6 @@ const TreenodeNavigatorNext = host => {
 			.filter(item => item)));
 	}, [openNodePath]);
 
-
 	useEffect(() => {
 		if (!openNodePath) {
 			notifyProperty(host, 'highlightedNodePath', '');
@@ -116,6 +116,11 @@ const TreenodeNavigatorNext = host => {
 			.filter(item => item)));
 	}, [openNodePath]);
 
+	useEffect(() => {
+		host.dispatchEvent(new CustomEvent('select-node', {
+			detail: {}
+		}));
+	}, [nodePath]);
 
 	useEffect(() => {
 		notifyProperty(host, 'highlightedNodePath', !highlightedNode ? '' : highlightedNode.path);

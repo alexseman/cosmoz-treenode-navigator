@@ -103,7 +103,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 					on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
 					search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
 					search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
-					on-node-dblclicked="_selectNodeAndCloseDialog">
+					on-node-dblclicked="_selectNodeAndCloseDialog" on-select-node="selectNode">
 					<slot></slot>
 				</cosmoz-treenode-navigator-next>
 				<div class="buttons">
@@ -162,8 +162,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			* Placeholder for the search field
 			*/
 			searchPlaceholder: {
-				type: String,
-				value: 'Search'
+				type: String
 			},
 			/*
 			* Placeholder for button text
@@ -306,9 +305,11 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	selectNode() {
 		// nodePath selects the node, without it no selectedNode
-		this.selectedNode = getNode(this.highlightedNodePath, this.tree);
-		this.nodePath = this.highlightedNodePath;
-		this.nodesOnNodePath = getTreePathParts(this.highlightedNodePath, this.tree);
+		this.selectedNode = getNode(this.highlightedNodePath || this.nodePath, this.tree);
+		if (this.highlightedNodePath) {
+			this.nodePath = this.highlightedNodePath;
+		}
+		this.nodesOnNodePath = getTreePathParts(this.highlightedNodePath || this.nodePath, this.tree);
 		if (this.multiSelection) {
 			if (!this.selectedNodes.some(node => node.pathLocator === this.highlightedNodePath)) {
 				this.push('selectedNodes', this.selectedNode);

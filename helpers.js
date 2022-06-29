@@ -97,7 +97,6 @@ const tree = new DefaultTree(basicTree),
 				}
 				return 0;
 			};
-
 		return normalizeNodes(level)
 			.sort(sortFunc);
 	},
