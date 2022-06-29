@@ -9,7 +9,7 @@ import { notifyProperty } from '@neovici/cosmoz-utils/lib/hooks/use-notify-prope
 import {
 	computeDataPlane,
 	computeRowClass,
-	computeSearching, getNode,
+	computeSearching,
 	getNodeName,
 	hasChildren,
 	nodeStyles,
@@ -60,7 +60,6 @@ const TreenodeNavigatorNext = host => {
 		 * The currently displayed node list
 		 */
 		dataPlane = useMemo(() => {
-			console.log(highlightedNode);
 			return computeDataPlane(computeSearching(searchValue, searchMinLength), searchValue, renderLevel(openNodePath, tree), tree);
 		}, [tree, openNodePath, highlightedNode, searchValue]),
 		/**
@@ -247,4 +246,4 @@ const TreenodeNavigatorNext = host => {
 		`;
 };
 
-customElements.define('cosmoz-treenode-navigator-next', component(TreenodeNavigatorNext));
+customElements.define('cosmoz-treenode-navigator', component(TreenodeNavigatorNext));

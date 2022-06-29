@@ -12,7 +12,7 @@ import '@neovici/cosmoz-dialog';
 import { Tree } from '@neovici/cosmoz-tree';
 import { translatable } from '@neovici/cosmoz-i18next';
 
-import './cosmoz-treenode-navigator-next';
+import './cosmoz-treenode-navigator';
 import { getNode, getTreePathParts } from './helpers';
 
 /**
@@ -99,13 +99,13 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		<cosmoz-dialog id="dialogTree" class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
 			<template>
 				<h2>[[ dialogText ]]</h2>
-				<cosmoz-treenode-navigator-next id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
+				<cosmoz-treenode-navigator id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
 					on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
 					search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
 					search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
 					on-node-dblclicked="_selectNodeAndCloseDialog" on-select-node="selectNode">
 					<slot></slot>
-				</cosmoz-treenode-navigator-next>
+				</cosmoz-treenode-navigator>
 				<div class="buttons">
 					<paper-button disabled="[[!highlightedNodePath]]" dialog-confirm autofocus on-click="selectNode">[[ _('Select', t) ]]</paper-button>
 					<paper-button dialog-dismiss>[[ _('Cancel', t) ]]</paper-button>
