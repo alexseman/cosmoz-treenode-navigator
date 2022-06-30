@@ -234,6 +234,11 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		this.splice('selectedNodes', selectedIndex, 1);
 		// ... so we must prevent further propagation of this event, because its source is now invalid.
 		// (This has caused troubles in app-drawer-layout click event handler).
+
+		if (!this.selectedNodes.length) {
+			this.reset();
+		}
+
 		event.preventDefault();
 		event.stopPropagation();
 	}
@@ -264,6 +269,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {string} Button label.
 	 */
 	_getButtonLabel(pathParts, placeholder) {
+			console.log(pathParts)
 		if (!Array.isArray(pathParts) || pathParts.length === 0) {
 			return placeholder;
 		}
@@ -297,7 +303,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	reset() {
 		this.nodePath = '';
+		this.selectedNode = {};
+		this.nodesOnNodePath = [];
 		this.selectedNodes = [];
+		this.highlightedNodePath = '';
 	}
 	/**
 	 * Select the node in the treenode navigator.
@@ -305,15 +314,18 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	selectNode() {
 		// nodePath selects the node, without it no selectedNode
+
 		this.selectedNode = getNode(this.highlightedNodePath || this.nodePath, this.tree);
 		if (this.highlightedNodePath) {
 			this.nodePath = this.highlightedNodePath;
 		}
 		this.nodesOnNodePath = getTreePathParts(this.highlightedNodePath || this.nodePath, this.tree);
+
 		if (this.multiSelection) {
 			if (!this.selectedNodes.some(node => node.pathLocator === this.highlightedNodePath)) {
 				this.push('selectedNodes', this.selectedNode);
 			}
+				console.log(this.selectedNodes)
 			this.nodePath = '';
 			this.selectedNode = {};
 		}
