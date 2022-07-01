@@ -203,7 +203,7 @@ const tree = new DefaultTree(basicTree),
 			font-family: 'Roboto', 'Noto', sans-serif;
 			font-size: 16px;
 			font-weight: 400;
-			height: 28px;
+			height: 40px;
 			line-height: 24px;
 			padding: 6px 12px;
 	  }

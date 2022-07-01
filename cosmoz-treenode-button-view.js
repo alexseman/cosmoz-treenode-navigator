@@ -269,7 +269,6 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {string} Button label.
 	 */
 	_getButtonLabel(pathParts, placeholder) {
-			console.log(pathParts)
 		if (!Array.isArray(pathParts) || pathParts.length === 0) {
 			return placeholder;
 		}
@@ -325,7 +324,6 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			if (!this.selectedNodes.some(node => node.pathLocator === this.highlightedNodePath)) {
 				this.push('selectedNodes', this.selectedNode);
 			}
-				console.log(this.selectedNodes)
 			this.nodePath = '';
 			this.selectedNode = {};
 		}

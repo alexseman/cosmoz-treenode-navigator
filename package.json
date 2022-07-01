@@ -71,6 +71,7 @@
 		"@web/test-runner": "^0.13.19",
 		"@web/test-runner-selenium": "^0.5.2",
 		"haunted": "^5.0.0",
+		"lit": "^2.2.7",
 		"lit-html": "^2.0.0"
 	},
 	"devDependencies": {
