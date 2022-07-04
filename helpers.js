@@ -111,7 +111,7 @@ const tree = new DefaultTree(basicTree),
 		let selected = false;
 		if (highlightedNode) {
 			selected = node === highlightedNode
-							|| (node.id && node.id === highlightedNode.id)
+							|| node.id && node.id === highlightedNode.id
 							|| node.pathLocator === highlightedNode.pathLocator;
 		}
 		return selected ? classes + ' selected' : classes;
