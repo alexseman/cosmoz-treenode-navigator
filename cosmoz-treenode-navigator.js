@@ -19,7 +19,7 @@ import {
 	renderLevel, showGlobalSearchBtn
 } from './helpers';
 
-const TreenodeNavigatorNext = host => {
+const TreenodeNavigator = host => {
 	const {
 			/**
 			 * The main node structure
@@ -249,4 +249,4 @@ const TreenodeNavigatorNext = host => {
 	`;
 };
 
-customElements.define('cosmoz-treenode-navigator', component(TreenodeNavigatorNext));
+customElements.define('cosmoz-treenode-navigator', component(TreenodeNavigator));
