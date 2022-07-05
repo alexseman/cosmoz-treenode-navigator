@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.1.1...v4.0.0) (2022-07-05)
+
+
+### Code Refactoring
+
+* **migration:** index.html -  Remove formatting changes ([c12af88](https://github.com/neovici/cosmoz-treenode-navigator/commit/c12af889c5b4f5f3b191538e2280c4b29b185b3e))
+
+
+### BREAKING CHANGES
+
+* **migration:** migration to haunted.js and Lit
+
 ## [3.1.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.1.0...v3.1.1) (2022-06-02)
 
 

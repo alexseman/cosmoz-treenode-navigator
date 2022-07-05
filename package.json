@@ -1,6 +1,6 @@
 {
 	"name": "@neovici/cosmoz-treenode-navigator",
-	"version": "3.1.1",
+	"version": "4.0.0",
 	"description": "A Polymer component that lets you navigate and search through hierarchically structured data-nodes and select one of them.",
 	"keywords": [
 		"polymer",
@@ -46,11 +46,11 @@
 			"@commitlint/config-conventional"
 		],
 		"rules": {
-		  "body-max-line-length": [
-			1,
-			"always",
-			100
-		  ]
+			"body-max-line-length": [
+				1,
+				"always",
+				100
+			]
 		}
 	},
 	"dependencies": {
