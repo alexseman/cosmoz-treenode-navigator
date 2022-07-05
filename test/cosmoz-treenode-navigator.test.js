@@ -1,56 +1,85 @@
 import { assert, fixture, html } from '@open-wc/testing';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './data/basicTree.js';
-import { flush } from '@polymer/polymer/lib/utils/flush';
 import '../cosmoz-treenode-navigator';
+import { computeDataPlane, computeSearching, hasChildren, renderLevel } from '../helpers';
 
 suite('cosmoz-treenode-navigator', () => {
 	let navigator;
 
 	setup(async () => {
-		navigator = await fixture(html`<cosmoz-treenode-navigator .tree=${ new DefaultTree(basicTree) }>`);
-		flush();
+		navigator = await fixture(html`
+			<cosmoz-treenode-navigator
+					.tree=${ new DefaultTree(basicTree) }
+					.searchPlaceholder="${ 'Custom search placeholder' }"
+					.searchMinLength="${ 2 }"
+			>`);
 	});
 
 	test('instantiating the element', () => {
 		assert.equal(navigator.tagName, 'COSMOZ-TREENODE-NAVIGATOR');
 	});
 
-	test('dataPlane initialised with tree', () => {
-		assert.equal(navigator.dataPlane[0].name, 'Root');
-		assert.equal(
-			navigator.dataPlane.length,
-			navigator.tree._roots.length
-		);
-	});
-
 	test('tree length and sort', () => {
 		// given a node navigator with some data
 
 		// when I enter the first node
-		navigator.shadowRoot
-			.querySelector('#ironList paper-icon-button')
-			.click();
-		flush();
+		navigator.openNodePath = '1000';
 
+		const dataPlane = computeDataPlane(
+			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.searchValue,
+			renderLevel(navigator.openNodePath, navigator.tree),
+			navigator.tree
+		);
 		// then I can see the contents of the node
 		// and it is ordered folder-first, then alphabetically
-		assert.equal(navigator.dataPlane[0].name, 'Node2');
-		assert.equal(navigator.dataPlane[1].name, 'Node4');
-		assert.equal(navigator.dataPlane[2].name, 'Node');
-		assert.equal(navigator.dataPlane[3].name, 'Node');
-		assert.equal(navigator.dataPlane.length, 4);
+		assert.equal(dataPlane[0].name, 'Data');
+		assert.equal(dataPlane[1].name, 'Backup');
+		assert.equal(dataPlane.length, 2);
+	});
+
+	test('set proper search placeholder', () => {
+		assert.equal(
+			navigator.shadowRoot.querySelector('cosmoz-input')
+				.shadowRoot
+				.querySelector('input').placeholder,
+			'Custom search placeholder');
+	});
+
+	test('compute search if value is bigger than searchMinLength', () => {
+		assert.equal(computeSearching('long string', navigator.searchMinLength), true);
+		assert.equal(computeSearching('a', navigator.searchMinLength), false);
+	});
+
+	test('should check if node has children', () => {
+		const node = {
+			name: 'D:',
+			path: '1000',
+			children: { 1001: { name: 'Data', pathLocator: '1000.1001', children: { 1002: { name: 'John', pathLocator: '1000.1001.1002' }}}},
+			parentSectionName: 'D:',
+			pathLocator: '1000'
+		};
+		assert.equal(hasChildren(node), true);
+		const node2 = { name: 'Git', path: '1.5.7', parentSectionName: 'C:/Program Files', pathLocator: '1.5.7' };
+		assert.equal(hasChildren(node2), false);
 	});
 
 	test('match search string', () => {
 		// given a node navigator with some data
-		// when I search for 'ode2'
-		navigator.searchValue = 'ode2';
-		flush();
+		// when I search for 'John'
+		navigator.searchValue = 'John';
 
-		//then I can see only 1 item matching 'ode2'
-		assert.lengthOf(navigator.dataPlane, 1);
-		assert.equal(navigator.dataPlane[0].name, 'Node2');
+		const dataPlane = computeDataPlane(
+			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.searchValue,
+			renderLevel('1000', navigator.tree),
+			navigator.tree
+		);
+
+		//then I can see only 1 item matching 'John'
+		assert.lengthOf(dataPlane, 1);
+		assert.equal(dataPlane[0].name, 'John');
 
 	});
 
@@ -58,9 +87,14 @@ suite('cosmoz-treenode-navigator', () => {
 		// given a node navigator with some data
 		// when I search for 'NONEXISTING'
 		navigator.searchValue = 'NONEXISTING';
-		flush();
+		const dataPlane = computeDataPlane(
+			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.searchValue,
+			renderLevel('1000', navigator.tree),
+			navigator.tree
+		);
 
 		//then I can see that is no contents
-		assert.lengthOf(navigator.dataPlane, 0);
+		assert.lengthOf(dataPlane, 0);
 	});
 });

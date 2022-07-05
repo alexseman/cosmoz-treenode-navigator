@@ -1,60 +1,117 @@
 export default {
 	1: {
-		id: '11111111-1111-1111-1111-111111111111',
-		name: 'Root',
+		name: 'C:',
 		pathLocator: '1',
 		children: {
-			6: {
-				id: '2b577550-b874-4228-9395-a4fb00f31241',
-				name: 'Node',
-				pathLocator: '1.6',
-				children: {}
-			},
-			7: {
-				id: '2b577550-b874-4228-9395-a4fb00f31242',
-				name: 'Node',
-				pathLocator: '1.7',
-				children: {}
-			},
-			4: {
-				id: '177d1485-7d4f-4c7d-86cd-a4fb00f31243',
-				name: 'Node4',
-				pathLocator: '1.2.3.4',
-				children: {
-					5: {
-						id: '3a7754f1-e3e6-49c7-b6a8-a4fb00f31244',
-						name: 'Node5',
-						pathLocator: '1.2.3.4.5',
-						children: {
-							501: {
-								id: '3a7754f1-e3e6-49c7-b6a8-a4fb00f31245',
-								name: 'Node501',
-								pathLocator: '1.2.3.4.5.501',
-								children: {}
-							}
-						}
-					}
-				}
-			},
 			2: {
-				id: '167d1485-7d4f-4c7d-86cd-a4fb00f31246',
-				name: 'Node2',
+				name: 'Windows',
 				pathLocator: '1.2',
 				children: {
 					3: {
-						id: '3a7654f1-e3e6-49c7-b6a8-a4fb00f31247',
-						name: 'Node3',
+						name: 'System',
 						pathLocator: '1.2.3',
+						children: {}
+					},
+					4: {
+						name: 'Microsoft.NET',
+						pathLocator: '1.2.4',
+						children: {}
+					}
+				}
+			},
+			5: {
+				name: 'Program Files',
+				pathLocator: '1.5',
+				children: {
+					6: {
+						name: 'Microsoft VS Code',
+						pathLocator: '1.5.6'
+					},
+					7: {
+						name: 'Git',
+						pathLocator: '1.5.7'
+					}
+				}
+			},
+			100: {
+				name: 'Users',
+				pathLocator: '1.100',
+				children: {
+					200: {
+						name: 'Default',
+						pathLocator: '1.100.200',
+						children: {
+							201: {
+								name: 'Documents',
+								pathLocator: '1.100.200.201'
+							},
+							202: {
+								name: 'Music',
+								pathLocator: '1.100.200.202'
+							},
+							203: {
+								name: 'Pictures',
+								pathLocator: '1.100.200.203'
+							}
+						}
+					},
+					300: {
+						name: 'John',
+						pathLocator: '1.100.300',
 						children: {
 							301: {
-								id: '3a7654f1-e3e6-49c7-b6a8-a4fb00f31248',
-								name: 'Node301',
-								pathLocator: '1.2.3.301',
-								children: {}
+								name: 'Documents',
+								pathLocator: '1.100.300.301'
+							},
+							302: {
+								name: 'Music',
+								pathLocator: '1.100.300.302'
+							},
+							303: {
+								name: 'Pictures',
+								pathLocator: '1.100.300.303'
+							}
+						}
+					},
+					400: {
+						name: 'Public',
+						pathLocator: '1.100.400',
+						children: {
+							401: {
+								name: 'Public Documents',
+								pathLocator: '1.100.400.401'
+							},
+							402: {
+								name: 'Public Music',
+								pathLocator: '1.100.400.402'
+							},
+							403: {
+								name: 'Public Pictures',
+								pathLocator: '1.100.400.403'
 							}
 						}
 					}
 				}
+			}
+		}
+	},
+	1000: {
+		name: 'D:',
+		pathLocator: '1000',
+		children: {
+			1001: {
+				name: 'Data',
+				pathLocator: '1000.1001',
+				children: {
+					1002: {
+						name: 'John',
+						pathLocator: '1000.1001.1002'
+					}
+				}
+			},
+			1002: {
+				name: 'Backup',
+				pathLocator: '1000.1002'
 			}
 		}
 	}
