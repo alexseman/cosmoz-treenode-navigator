@@ -44,27 +44,41 @@
 	"commitlint": {
 		"extends": [
 			"@commitlint/config-conventional"
-		]
+		],
+		"rules": {
+		  "body-max-line-length": [
+			1,
+			"always",
+			100
+		  ]
+		}
 	},
 	"dependencies": {
+		"@neovici/cfg": "^1.15.2",
+		"@neovici/cosmoz-autocomplete": "^4.0.0",
 		"@neovici/cosmoz-dialog": "^3.0.0",
 		"@neovici/cosmoz-i18next": "^3.2.0",
+		"@neovici/cosmoz-input": "^2.0.0",
 		"@neovici/cosmoz-tree": "^3.0.0",
+		"@neovici/cosmoz-utils": "^4.0.0",
+		"@open-wc/lit-helpers": "^0.4.1",
 		"@polymer/iron-icons": "^3.0.0",
-		"@polymer/iron-list": "^3.1.0",
 		"@polymer/paper-button": "^3.0.0",
 		"@polymer/paper-icon-button": "^3.0.0",
 		"@polymer/paper-input": "^3.2.0",
 		"@polymer/polymer": "^3.4.0",
 		"@web/dev-server": "^0.1.25",
 		"@web/test-runner": "^0.13.19",
-		"@web/test-runner-selenium": "^0.5.2"
+		"@web/test-runner-selenium": "^0.5.2",
+		"haunted": "^5.0.0",
+		"lit": "^2.2.7",
+		"lit-html": "^2.0.0"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^13.0.0",
-		"@commitlint/config-conventional": "^13.0.0",
+		"@commitlint/cli": "^17.0.0",
+		"@commitlint/config-conventional": "^17.0.0",
 		"@neovici/eslint-config": "^1.3.0",
-		"@open-wc/testing": "^2.5.33",
+		"@open-wc/testing": "^3.0.0",
 		"@polymer/iron-ajax": "^3.0.0",
 		"@polymer/iron-component-page": "^4.0.0",
 		"@polymer/iron-demo-helpers": "^3.0.0",

@@ -1,5 +1,6 @@
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@polymer/paper-button/paper-button';
+import '@polymer/iron-icons/iron-icons';
 
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce';
 import { timeOut } from '@polymer/polymer/lib/utils/async';
@@ -12,6 +13,7 @@ import { Tree } from '@neovici/cosmoz-tree';
 import { translatable } from '@neovici/cosmoz-i18next';
 
 import './cosmoz-treenode-navigator';
+import { getNode, getTreePathParts } from './helpers';
 
 /**
 	`cosmoz-treenode-navigator`
@@ -23,94 +25,144 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	/* eslint-disable-next-line max-lines-per-function */
 	static get template() {
 		return html`
-		<style>
-			.actions { display: flex; }
-			.open { flex: auto; }
-			.pathToNode {
-				max-width: 320px;
-				overflow: hidden;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				direction: rtl;
-				text-align: left;
-			}
-			/* Safari only css fix */
-			@media not all and (min-resolution:.001dpcm) { @supports (-webkit-appearance:none) {
-				.pathToNode span { display: inline-block;}
-			}}
+			<style>
+				.actions {
+					display: flex;
+				}
+				.open {
+					flex: auto;
+				}
+				.pathToNode {
+					max-width: 320px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					direction: rtl;
+					text-align: left;
+				}
+				/* Safari only css fix */
+				@media not all and (min-resolution: 0.001dpcm) {
+					@supports (-webkit-appearance: none) {
+						.pathToNode span {
+							display: inline-block;
+						}
+					}
+				}
 
-			#chips {
-				display: flex;
-				flex-wrap: wrap;
-				max-width: 90%;
-				padding: 20px;
-				overflow-y: auto;
-				max-height: 30vh;
-			}
-			.chip {
-				border-radius: 500px;
-				background-color: #e0e0e0;
-				margin: 1px 4px 1px 0;
-				white-space: nowrap;
-				overflow: hidden;
-				display: flex;
-				align-items: center;
-			}
-			.chip > span {
-				color: #424242;
-				margin-left: 10px;
-				font-size: 13px;
-				overflow: hidden;
-				text-overflow: ellipsis;
-			}
-			.chip iron-icon {
-				margin: 2px 4px;
-				color: #cdcdcd;
-				background-color: #a6a6a6;
-				border-radius: 500px;
-				cursor: pointer;
-				min-width: 16px;
-				width: 16px;
-				min-height: 16px;
-				height: 16px;
-			}
+				#chips {
+					display: flex;
+					flex-wrap: wrap;
+					max-width: 90%;
+					padding: 20px;
+					overflow-y: auto;
+					max-height: 30vh;
+				}
+				.chip {
+					border-radius: 500px;
+					background-color: #e0e0e0;
+					margin: 1px 4px 1px 0;
+					white-space: nowrap;
+					overflow: hidden;
+					display: flex;
+					align-items: center;
+				}
+				.chip > span {
+					color: #424242;
+					margin-left: 10px;
+					font-size: 13px;
+					overflow: hidden;
+					text-overflow: ellipsis;
+				}
+				.chip iron-icon {
+					margin: 2px 4px;
+					color: #cdcdcd;
+					background-color: #a6a6a6;
+					border-radius: 500px;
+					cursor: pointer;
+					min-width: 16px;
+					width: 16px;
+					min-height: 16px;
+					height: 16px;
+				}
 
-			#dialogTree {
-				min-width: 250px !important;
-				width: 450px;
-			}
-		</style>
-		<div class="actions">
-			<paper-button part="button" class="open" raised on-click="openDialogTree" title="[[ buttonText ]]">
-				<div class="pathToNode">&lrm;<span>[[ buttonText ]]</span></div>
-			</paper-button>
-			<paper-icon-button part="clear" icon="clear" on-click="reset" hidden$="[[ !_enableReset(nodePath, noReset) ]]"></paper-icon-button>
-		</div>
-		<template is="dom-if" if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]">
-			<div id="chips" class="row">
-				<template is="dom-repeat" items="[[ selectedNodes ]]">
-					<div class="chip"><span>[[ _getChipText(item, tree) ]]</span><iron-icon icon="clear" on-click="_clearItemSelection"></iron-icon></div>
-				</template>
+				#dialogTree {
+					min-width: 250px !important;
+					width: 450px;
+				}
+			</style>
+			<div class="actions">
+				<paper-button
+					part="button"
+					class="open"
+					raised
+					on-click="openDialogTree"
+					title="[[ buttonText ]]"
+				>
+					<div class="pathToNode">&lrm;<span>[[ buttonText ]]</span></div>
+				</paper-button>
+				<paper-icon-button
+					part="clear"
+					icon="clear"
+					on-click="reset"
+					hidden$="[[ !_enableReset(nodePath, noReset) ]]"
+				></paper-icon-button>
 			</div>
-		</template>
-
-		<cosmoz-dialog id="dialogTree" class="treeDialog" on-iron-overlay-opened="focusSearch" modal prerender>
-			<template>
-				<h2>[[ dialogText ]]</h2>
-				<cosmoz-treenode-navigator id="treeNavigator" class="no-padding" tree="[[ tree ]]" selected-node="{{ selectedNode }}"
-					on-data-plane-changed="refit" highlighted-node-path="{{ highlightedNodePath }}"
-					search-placeholder="[[ searchPlaceholder ]]" search-global-placeholder="[[ searchGlobalPlaceholder ]]"
-					search-min-length="[[ searchMinLength ]]" node-path="{{ nodePath }}" nodes-on-node-path="{{ nodesOnNodePath }}"
-					on-node-dblclicked="_selectNodeAndCloseDialog">
-					<slot></slot>
-				</cosmoz-treenode-navigator>
-				<div class="buttons">
-					<paper-button disabled="[[!highlightedNodePath]]" dialog-confirm autofocus on-click="selectNode">[[ _('Select', t) ]]</paper-button>
-					<paper-button dialog-dismiss>[[ _('Cancel', t) ]]</paper-button>
+			<template
+				is="dom-if"
+				if="[[ _showSelectedNodes(multiSelection, selectedNodes.length) ]]"
+			>
+				<div id="chips" class="row">
+					<template is="dom-repeat" items="[[ selectedNodes ]]">
+						<div class="chip">
+							<span>[[ _getChipText(item, tree) ]]</span
+							><iron-icon
+								icon="clear"
+								on-click="_clearItemSelection"
+							></iron-icon>
+						</div>
+					</template>
 				</div>
 			</template>
-		</cosmoz-dialog>
-`;
+
+			<cosmoz-dialog
+				id="dialogTree"
+				class="treeDialog"
+				on-iron-overlay-opened="focusSearch"
+				modal
+				prerender
+			>
+				<template>
+					<h2>[[ dialogText ]]</h2>
+					<cosmoz-treenode-navigator
+						id="treeNavigator"
+						class="no-padding"
+						tree="[[ tree ]]"
+						selected-node="{{ selectedNode }}"
+						on-data-plane-changed="refit"
+						highlighted-node-path="{{ highlightedNodePath }}"
+						search-placeholder="[[ searchPlaceholder ]]"
+						search-global-placeholder="[[ searchGlobalPlaceholder ]]"
+						search-min-length="[[ searchMinLength ]]"
+						node-path="{{ nodePath }}"
+						nodes-on-node-path="{{ nodesOnNodePath }}"
+						on-node-dblclicked="_selectNodeAndCloseDialog"
+						on-select-node="selectNode"
+					>
+						<slot></slot>
+					</cosmoz-treenode-navigator>
+					<div class="buttons">
+						<paper-button
+							disabled="[[!highlightedNodePath]]"
+							dialog-confirm
+							autofocus
+							on-click="selectNode"
+							>[[ _('Select', t) ]]</paper-button
+						>
+						<paper-button dialog-dismiss>[[ _('Cancel', t) ]]</paper-button>
+					</div>
+				</template>
+			</cosmoz-dialog>
+		`;
 	}
 
 	static get is() {
@@ -120,20 +172,19 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	/* eslint-disable-next-line max-lines-per-function */
 	static get properties() {
 		return {
-
 			multiSelection: {
 				type: Boolean,
 				value: false
 			},
 			/*
-			* The main node structure
-			*/
+			 * The main node structure
+			 */
 			tree: {
 				type: Tree
 			},
 			/*
-			* Currently selected node object
-			*/
+			 * Currently selected node object
+			 */
 			selectedNode: {
 				type: Object,
 				value() {
@@ -157,14 +208,14 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 				value: false
 			},
 			/*
-			* Placeholder for the search field
-			*/
+			 * Placeholder for the search field
+			 */
 			searchPlaceholder: {
 				type: String
 			},
 			/*
-			* Placeholder for button text
-			*/
+			 * Placeholder for button text
+			 */
 			buttonTextPlaceholder: {
 				type: String,
 				computed: 'getButtonTextPlaceholder(multiSelection)'
@@ -176,42 +227,44 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			},
 
 			/*
-			* The path of the selected node
-			*/
+			 * The path of the selected node
+			 */
 			nodePath: {
 				type: String,
 				notify: true
 			},
 			/*
-			* The nodes on the path of the selected node
-			*/
+			 * The nodes on the path of the selected node
+			 */
 			nodesOnNodePath: {
 				type: Array
 			},
 			/*
-			* Text displayed when local search has finished
-			* to suggest a search on the entire tree
-			*/
+			 * Text displayed when local search has finished
+			 * to suggest a search on the entire tree
+			 */
 			searchGlobalPlaceholder: {
-				type: String
+				type: String,
+				value: 'Click to search again but globally.'
 			},
 			/*
-			* Settable text for dialog title.
-			*/
+			 * Settable text for dialog title.
+			 */
 			dialogText: {
 				type: String,
 				value: 'Search or navigate to chosen destination'
 			},
 			/*
-			* Minimum length before an search
-			* starts.
-			*/
+			 * Minimum length before an search
+			 * starts.
+			 */
 			searchMinLength: {
-				type: Number
+				type: Number,
+				value: 1
 			},
 			/*
-			* Path string of highlighted (focused) node
-			*/
+			 * Path string of highlighted (focused) node
+			 */
 			highlightedNodePath: {
 				type: String
 			}
@@ -230,6 +283,11 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		this.splice('selectedNodes', selectedIndex, 1);
 		// ... so we must prevent further propagation of this event, because its source is now invalid.
 		// (This has caused troubles in app-drawer-layout click event handler).
+
+		if (!this.selectedNodes.length) {
+			this.reset();
+		}
+
 		event.preventDefault();
 		event.stopPropagation();
 	}
@@ -239,7 +297,9 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {string} Text label.
 	 */
 	getButtonTextPlaceholder(multiSelection) {
-		return multiSelection ? this._('Select a node') : this._('No selection made');
+		return multiSelection
+			? this._('Select a node')
+			: this._('No selection made');
 	}
 	/**
 	 * Whether the reset button should be enabled or not.
@@ -263,7 +323,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		if (!Array.isArray(pathParts) || pathParts.length === 0) {
 			return placeholder;
 		}
-		return pathParts.filter(n => n).map(part => part[this.tree.searchProperty]).join(' / ');
+		return pathParts
+			.filter(n => n)
+			.map(part => part[this.tree.searchProperty])
+			.join(' / ');
 	}
 	/**
 	 * Get text from a node to set on a node chip.
@@ -293,7 +356,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	reset() {
 		this.nodePath = '';
+		this.selectedNode = {};
+		this.nodesOnNodePath = [];
 		this.selectedNodes = [];
+		this.highlightedNodePath = '';
 	}
 	/**
 	 * Select the node in the treenode navigator.
@@ -301,9 +367,25 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	selectNode() {
 		// nodePath selects the node, without it no selectedNode
-		this.nodePath = this.highlightedNodePath;
+
+		this.selectedNode = getNode(
+			this.highlightedNodePath || this.nodePath,
+			this.tree
+		);
+		if (this.highlightedNodePath) {
+			this.nodePath = this.highlightedNodePath;
+		}
+		this.nodesOnNodePath = getTreePathParts(
+			this.highlightedNodePath || this.nodePath,
+			this.tree
+		);
+
 		if (this.multiSelection) {
-			if (!this.selectedNodes.some(node => node.pathLocator === this.highlightedNodePath)) {
+			if (
+				!this.selectedNodes.some(
+					node => node.pathLocator === this.highlightedNodePath
+				)
+			) {
 				this.push('selectedNodes', this.selectedNode);
 			}
 			this.nodePath = '';
@@ -325,7 +407,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {boolean} Whether the selected nodes container should be visible or not.
 	 */
 	_showSelectedNodes(multiSelection, selectedNodesLength) {
-		return	multiSelection && selectedNodesLength > 0;
+		return multiSelection && selectedNodesLength > 0;
 	}
 	/**
 	 * Callback event handler to refit the treenode navigator dialog when
@@ -333,11 +415,13 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {void}
 	 */
 	refit() {
-		this._debouncer = Debouncer.debounce(this._debouncer,
+		this._debouncer = Debouncer.debounce(
+			this._debouncer,
 			timeOut.after(50), // 5 was enough during test
 			() => {
 				this.$.dialogTree.fit();
-			});
+			}
+		);
 	}
 }
 customElements.define(CosmozTreenodeButtonView.is, CosmozTreenodeButtonView);
