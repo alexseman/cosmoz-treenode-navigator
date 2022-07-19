@@ -1,10 +1,10 @@
 import { component, useEffect, useState, useMemo, useCallback } from 'haunted';
 import { html } from 'lit-html';
-import { when } from 'lit/directives/when.js';
+import { when } from 'lit-html/directives/when.js';
 
 import '@neovici/cosmoz-input';
 import '@neovici/cosmoz-autocomplete';
-import { notifyProperty } from '@neovici/cosmoz-utils/lib/hooks/use-notify-property';
+import { notifyProperty } from '@neovici/cosmoz-utils/hooks/use-notify-property';
 
 import {
 	computeDataPlane,

@@ -1,6 +1,6 @@
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './test/data/basicTree';
-import { tagged as css } from '@neovici/cosmoz-utils/lib/tagged';
+import { tagged as css } from '@neovici/cosmoz-utils';
 
 const tree = new DefaultTree(basicTree),
 	/**
