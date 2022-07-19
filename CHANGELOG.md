@@ -1,3 +1,15 @@
+# [5.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v4.0.0...v5.0.0) (2022-07-19)
+
+
+### Features
+
+* upgrade to cosmoz-utils@5 ([8c70d76](https://github.com/neovici/cosmoz-treenode-navigator/commit/8c70d76d8157e0793f10566a7f75e98f44d0a67f))
+
+
+### BREAKING CHANGES
+
+* Upgrade to cosmoz-utils@5
+
 # [4.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v3.1.1...v4.0.0) (2022-07-05)
 
 
