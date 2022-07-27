@@ -239,7 +239,6 @@ const TreenodeNavigator = host => {
 				tabindex="0"
 				.value=${ searchValue }
 				.placeholder="${ searchPlaceholder }"
-				.label="${ searchPlaceholder }"
 				@input="${ ({ target }) => setSearchValue(target.value) }"
 			/>
 		</div>
