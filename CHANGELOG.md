@@ -1,3 +1,10 @@
+## [5.0.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.0.0...v5.0.1) (2022-07-27)
+
+
+### Bug Fixes
+
+* **search:** remove label ([950ed7c](https://github.com/neovici/cosmoz-treenode-navigator/commit/950ed7cef3ab282f5fea8925dae121c771723eab))
+
 # [5.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v4.0.0...v5.0.0) (2022-07-19)
 
 
