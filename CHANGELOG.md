@@ -1,3 +1,17 @@
+# [5.1.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.0.1...v5.1.0) (2022-07-28)
+
+
+### Bug Fixes
+
+* **ci:** worflow typo ([17b92aa](https://github.com/neovici/cosmoz-treenode-navigator/commit/17b92aa332f0411b6548729002fd9cf62a99d223))
+
+
+### Features
+
+* **cosmoz-treenode-navigator:** add keyboard navigation ([26b6d42](https://github.com/neovici/cosmoz-treenode-navigator/commit/26b6d42d99737d0b48a7fbc21a8677117b1d8a9e))
+* refactor with lit-virtualizer instead of listbox ([7b69ab4](https://github.com/neovici/cosmoz-treenode-navigator/commit/7b69ab4e0e049c9c7f8e03c3b781f02fab83eb18))
+* support `Right` key ([28a4df6](https://github.com/neovici/cosmoz-treenode-navigator/commit/28a4df6d35bc62ac49aba81135891ce8fcacfa05))
+
 ## [5.0.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.0.0...v5.0.1) (2022-07-27)
 
 
