@@ -172,6 +172,9 @@ const TreenodeNavigator = (host) => {
 						}
 					}
 					break;
+
+				case 'Right':
+				case 'ArrowRight':
 				case 'Enter':
 					if (node) {
 						e.preventDefault();
