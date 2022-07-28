@@ -144,8 +144,6 @@ const TreenodeNavigator = (host) => {
 		notifyProperty(host, 'highlightedNodePath', highlightedNode?.path || '');
 	}, [highlightedNode]);
 
-	console.warn('dataPlane', dataPlane)
-
 	const renderItem = (node, index) => html` <div class="item">
 		${when(
 			renderSection(index, node.parentSectionName),
