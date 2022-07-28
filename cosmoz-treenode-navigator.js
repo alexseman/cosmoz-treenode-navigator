@@ -16,10 +16,10 @@ import {
 	normalizeNodes,
 	onNodeDblClicked,
 	renderLevel,
-	showGlobalSearchBtn
+	showGlobalSearchBtn,
 } from './helpers';
 
-const TreenodeNavigator = host => {
+const TreenodeNavigator = (host) => {
 	const {
 			/**
 			 * The main node structure
@@ -38,7 +38,7 @@ const TreenodeNavigator = host => {
 			 * Minimum length of searchValue to trigger a search
 			 */
 			searchMinLength,
-			nodePath
+			nodePath,
 		} = host,
 		/**
 		 * The path of the opened node
@@ -73,7 +73,7 @@ const TreenodeNavigator = host => {
 		 * @param {object} clickedNode - The clicked node
 		 * @return {undefined}
 		 */
-		openNode = useCallback(clickedNode => {
+		openNode = useCallback((clickedNode) => {
 			if (hasChildren(clickedNode)) {
 				setOpenNodePath(clickedNode.path);
 				setSearchValue('');
@@ -120,7 +120,7 @@ const TreenodeNavigator = host => {
 			return;
 		}
 		setNodesOnOpenNodePath(
-			normalizeNodes(tree.getPathNodes(openNodePath).filter(item => item))
+			normalizeNodes(tree.getPathNodes(openNodePath).filter((item) => item))
 		);
 	}, [openNodePath]);
 
@@ -130,7 +130,7 @@ const TreenodeNavigator = host => {
 			return;
 		}
 		setNodesOnOpenNodePath(
-			normalizeNodes(tree.getPathNodes(openNodePath).filter(item => item))
+			normalizeNodes(tree.getPathNodes(openNodePath).filter((item) => item))
 		);
 	}, [openNodePath]);
 
@@ -138,7 +138,7 @@ const TreenodeNavigator = host => {
 		if (nodePath !== undefined) {
 			host.dispatchEvent(
 				new CustomEvent('select-node', {
-					detail: {}
+					detail: {},
 				})
 			);
 		}
@@ -218,7 +218,7 @@ const TreenodeNavigator = host => {
 		</style>
 		<div id="header">
 			<h3 class="path">
-				<span class="icon" @click=${ () => openNode() }>
+				<span class="icon" @click=${() => openNode()}>
 					<svg
 						viewBox="0 0 24 24"
 						preserveAspectRatio="xMidYMid meet"
@@ -228,52 +228,52 @@ const TreenodeNavigator = host => {
 						<g><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></g>
 					</svg>
 				</span>
-				${ nodesOnOpenNodePath.map(node => {
-		return html` <span class="slash">/</span>
-						<span class="pointer" tabindex="0" @click="${ () => openNode(node) }"
-							>${ getNodeName(node) }</span
+				${nodesOnOpenNodePath.map((node) => {
+					return html` <span class="slash">/</span>
+						<span class="pointer" tabindex="0" @click="${() => openNode(node)}"
+							>${getNodeName(node)}</span
 						>`;
-	}) }
+				})}
 			</h3>
 			<cosmoz-input
 				tabindex="0"
-				.value=${ searchValue }
-				.placeholder="${ searchPlaceholder }"
-				@input="${ ({ target }) => setSearchValue(target.value) }"
+				.value=${searchValue}
+				.placeholder="${searchPlaceholder}"
+				@input="${({ target }) => setSearchValue(target.value)}"
 			/>
 		</div>
-		${ when(
-		tree,
-		() => html`
+		${when(
+			tree,
+			() => html`
 			<cosmoz-listbox
-					.query="${ searchValue }"
-					.items="${ dataPlane }"
-					.textual="${ item => item.name }"
-					.itemRenderer=${ (node, index) => html`
+					.query="${searchValue}"
+					.items="${dataPlane}"
+					.textual="${(item) => item.name}"
+					.itemRenderer=${(node, index) => html`
 						<div class="node-item-wrapper">
 							<style>
-								${ nodeStyles }
+								${nodeStyles}
 							</style>
-							${ when(
-		renderSection(index, node.parentSectionName),
-		() => html`
-									<div class="section">${ node.parentSectionName }</div>
+							${when(
+								renderSection(index, node.parentSectionName),
+								() => html`
+									<div class="section">${node.parentSectionName}</div>
 								`
-	) }
+							)}
 							<div
-								class="${ computeRowClass(
-		'node-item pointer',
-		node,
-		highlightedNode
-	) }"
-								@click="${ () => setHighlightedNode(node) }"
-								@dblclick="${ e => onNodeDblClicked(e, host) }"
+								class="${computeRowClass(
+									'node-item pointer',
+									node,
+									highlightedNode
+								)}"
+								@click="${() => setHighlightedNode(node)}"
+								@dblclick="${(e) => onNodeDblClicked(e, host)}"
 							>
-								<div style="flex: auto">${ node.name }</div>
-								${ when(
-		hasChildren(node),
-		() => html`
-										<span class="icon" @click="${ () => openNode(node) }">
+								<div style="flex: auto">${node.name}</div>
+								${when(
+									hasChildren(node),
+									() => html`
+										<span class="icon" @click="${() => openNode(node)}">
 											<svg
 												viewBox="0 0 24 24"
 												preserveAspectRatio="xMidYMid meet"
@@ -288,23 +288,23 @@ const TreenodeNavigator = host => {
 											</svg>
 										</span>
 									`
-	) }
+								)}
 							</div>
 						</div>
-					` }
+					`}
 			</cosmoz-listbox>`
-	) }
-		${ when(
-		showGlobalSearchBtn(
-			computeSearching(searchValue, searchMinLength),
-			openNodePath
-		),
-		() => html`
-				<button class="btn-ghost" @click="${ () => setOpenNodePath('') }">
-					${ searchGlobalPlaceholder }
+		)}
+		${when(
+			showGlobalSearchBtn(
+				computeSearching(searchValue, searchMinLength),
+				openNodePath
+			),
+			() => html`
+				<button class="btn-ghost" @click="${() => setOpenNodePath('')}">
+					${searchGlobalPlaceholder}
 				</button>
 			`
-	) }
+		)}
 	`;
 };
 
