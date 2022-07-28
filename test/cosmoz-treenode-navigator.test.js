@@ -2,7 +2,7 @@ import { assert, fixture, html } from '@open-wc/testing';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './data/basicTree.js';
 import '../cosmoz-treenode-navigator';
-import { computeDataPlane, computeSearching, hasChildren, renderLevel } from '../helpers';
+import { computeDataPlane, computeSearching, renderLevel } from '../helpers';
 
 suite('cosmoz-treenode-navigator', () => {
 	let navigator;
@@ -60,9 +60,9 @@ suite('cosmoz-treenode-navigator', () => {
 			parentSectionName: 'D:',
 			pathLocator: '1000'
 		};
-		assert.equal(hasChildren(node), true);
+		assert.equal(navigator.tree.hasChildren(node), true);
 		const node2 = { name: 'Git', path: '1.5.7', parentSectionName: 'C:/Program Files', pathLocator: '1.5.7' };
-		assert.equal(hasChildren(node2), false);
+		assert.equal(navigator.tree.hasChildren(node2), false);
 	});
 
 	test('match search string', () => {

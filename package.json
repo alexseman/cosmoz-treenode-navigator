@@ -54,7 +54,7 @@
 		}
 	},
 	"dependencies": {
-		"@neovici/cosmoz-autocomplete": "^5.0.0",
+		"@lit-labs/virtualizer": "^0.7.1",
 		"@neovici/cosmoz-dialog": "^3.0.0",
 		"@neovici/cosmoz-i18next": "^3.2.0",
 		"@neovici/cosmoz-input": "^3.0.0",
@@ -80,9 +80,9 @@
 		"@polymer/test-fixture": "^4.0.2",
 		"@semantic-release/changelog": "^6.0.0",
 		"@semantic-release/git": "^10.0.0",
-		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"@web/dev-server": "^0.1.25",
 		"@web/test-runner": "^0.13.19",
+		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"husky": "^8.0.0",
 		"semantic-release": "^19.0.3"
 	}
