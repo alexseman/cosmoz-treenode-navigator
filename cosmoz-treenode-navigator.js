@@ -3,6 +3,7 @@ import { html } from 'lit-html';
 import { when } from 'lit-html/directives/when.js';
 import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
 import '@neovici/cosmoz-input';
+import { useMeta } from '@neovici/cosmoz-utils/hooks/use-meta';
 import { notifyProperty } from '@neovici/cosmoz-utils/hooks/use-notify-property';
 
 import {
@@ -143,6 +144,48 @@ const TreenodeNavigator = (host) => {
 	useEffect(() => {
 		notifyProperty(host, 'highlightedNodePath', highlightedNode?.path || '');
 	}, [highlightedNode]);
+
+	const meta = useMeta({ dataPlane, highlightedNode, openNode });
+
+	useEffect(() => {
+		const handler = (e) => {
+			if ((e.ctrlKey && e.altKey) || e.defaultPrevented) {
+				return;
+			}
+			const { dataPlane: items, highlightedNode: node, openNode: open } = meta;
+			switch (e.key) {
+				case 'Up':
+				case 'ArrowUp':
+					{
+						const idx = items.findIndex((i) => i.path === node?.path);
+						e.preventDefault();
+						setHighlightedNode(items[Math.max(idx - 1, 0)]);
+					}
+					break;
+				case 'Down':
+				case 'ArrowDown':
+					{
+						const idx = items.findIndex((i) => i.path === node?.path);
+						if (idx < items.length - 1) {
+							e.preventDefault();
+							setHighlightedNode(items[idx + 1]);
+						}
+					}
+					break;
+				case 'Enter':
+					if (node) {
+						e.preventDefault();
+						open(node);
+					}
+					break;
+				default:
+					break;
+			}
+		};
+
+		document.addEventListener('keydown', handler, true);
+		return () => document.removeEventListener('keydown', handler, true);
+	}, [meta]);
 
 	const renderItem = (node, index) => html` <div class="item">
 		${when(
