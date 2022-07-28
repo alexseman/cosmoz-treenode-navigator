@@ -11,7 +11,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-       - name: Checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
           fetch-depth: 0
@@ -24,7 +24,6 @@ jobs:
 
     - name: Install
       run: npm ci
-
 
     - name: Lint commit messages
       uses: wagoid/commitlint-github-action@v3
