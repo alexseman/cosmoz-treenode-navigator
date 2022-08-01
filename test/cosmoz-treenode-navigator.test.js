@@ -2,7 +2,7 @@ import { assert, fixture, html } from '@open-wc/testing';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './data/basicTree.js';
 import '../cosmoz-treenode-navigator';
-import { computeDataPlane, renderLevel } from '../helpers';
+import { computeDataPlane } from '../helpers';
 
 suite('cosmoz-treenode-navigator', () => {
 	let navigator;
