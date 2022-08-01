@@ -1,3 +1,10 @@
+# [5.2.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.1.0...v5.2.0) (2022-08-01)
+
+
+### Features
+
+* **cosmoz-treenode-navigator:** improve performance ([ac12d74](https://github.com/neovici/cosmoz-treenode-navigator/commit/ac12d74345501e34cdccde6962563a24d6efed4f))
+
 # [5.1.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.0.1...v5.1.0) (2022-07-28)
 
 
