@@ -19,7 +19,6 @@ export const //
 		}
 		const node = tree.getNodeByPathLocator(pathLocator),
 			children = tree.getChildren(node),
-			level = children.length > 0 ? children : node,
 			searchProperty = tree.searchProperty,
 			sortFunc = (a, b) => {
 				// First sort based on "folder" status (containing children)
@@ -42,7 +41,7 @@ export const //
 				}
 				return 0;
 			};
-		return level.sort(sortFunc);
+		return children.length > 0 ? children.sort(sortFunc) : node;
 	},
 	/**
 	 * Returns the found nodes based on a search string and a given tree to be searched
