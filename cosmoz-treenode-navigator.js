@@ -1,19 +1,17 @@
 import { component, useEffect, useState, useMemo, useCallback } from 'haunted';
 import { html } from 'lit-html';
 import { when } from 'lit-html/directives/when.js';
+import { guard } from 'lit-html/directives/guard.js';
 import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
 import '@neovici/cosmoz-input';
 import { useMeta } from '@neovici/cosmoz-utils/hooks/use-meta';
 import { notifyProperty } from '@neovici/cosmoz-utils/hooks/use-notify-property';
 
 import {
+	getParentPath,
 	computeDataPlane,
 	computeRowClass,
-	computeSearching,
-	normalizeNodes,
 	onNodeDblClicked,
-	renderLevel,
-	showGlobalSearchBtn,
 } from './helpers';
 import styles from './cosmoz-treenode-navigator.styles';
 
@@ -43,19 +41,6 @@ const TreenodeNavigator = (host) => {
 		 */
 		[openNodePath, setOpenNodePath] = useState(''),
 		/**
-		 * The nodes on the path of the opened node
-		 */
-		nodesOnOpenNodePath = useMemo(
-			() =>
-				openNodePath
-					? normalizeNodes(
-							tree,
-							tree.getPathNodes(openNodePath).filter((item) => item)
-					  )
-					: [],
-			[tree, openNodePath]
-		),
-		/**
 		 * The highlighted (focused) node
 		 * This is the node which is currently selected in the list
 		 */
@@ -64,20 +49,16 @@ const TreenodeNavigator = (host) => {
 		 * The search string
 		 */
 		[searchValue, setSearchValue] = useState(''),
-		isSearching = useMemo(
-			() => computeSearching(searchValue, searchMinLength),
+		search = useMemo(
+			() => (searchValue?.length > searchMinLength && searchValue) || undefined,
 			[searchValue, searchMinLength]
-		),
-		renderedLevel = useMemo(
-			() => renderLevel(openNodePath, tree),
-			[openNodePath, tree]
 		),
 		/**
 		 * The currently displayed node list
 		 */
 		dataPlane = useMemo(
-			() => computeDataPlane(isSearching, searchValue, renderedLevel, tree),
-			[isSearching, searchValue, renderedLevel, tree]
+			() => computeDataPlane(tree, search, openNodePath),
+			[tree, search, openNodePath]
 		),
 		/**
 		 * Opens a node (renderLevel) based on a given path
@@ -86,42 +67,11 @@ const TreenodeNavigator = (host) => {
 		 */
 		openNode = useCallback(
 			(clickedNode) => {
-				if (tree.hasChildren(clickedNode)) {
-					setOpenNodePath(clickedNode.path);
-					setSearchValue('');
-				}
-				if (!clickedNode) {
-					setOpenNodePath('');
-					setSearchValue('');
-					setHighlightedNode(null);
-				}
+				setOpenNodePath(clickedNode?.pathLocator || '');
+				setSearchValue('');
+				setHighlightedNode();
 			},
 			[tree]
-		),
-		/**
-		 * Returns true, if the path of a node should be visible in the view
-		 * @param {Number} index - The node's current index in the list
-		 * @param {Object} parentSectionName - The nodes current parent section name
-		 * @return {Boolean} - If the path should be visible
-		 */
-		renderSection = useCallback(
-			(index, parentSectionName) => {
-				if (
-					!isSearching ||
-					index == null ||
-					dataPlane == null ||
-					index >= dataPlane.length ||
-					parentSectionName == null
-				) {
-					return false;
-				}
-				if (index === 0) {
-					return true;
-				}
-				const prevItem = dataPlane[index - 1];
-				return prevItem.parentSectionName !== parentSectionName;
-			},
-			[isSearching, dataPlane]
 		);
 
 	useEffect(() => {
@@ -133,31 +83,35 @@ const TreenodeNavigator = (host) => {
 
 	useEffect(() => {
 		if (nodePath !== undefined) {
-			host.dispatchEvent(
-				new CustomEvent('select-node', {
-					detail: {},
-				})
-			);
+			host.dispatchEvent(new CustomEvent('select-node'));
 		}
 	}, [nodePath]);
 
 	useEffect(() => {
-		notifyProperty(host, 'highlightedNodePath', highlightedNode?.path || '');
+		notifyProperty(
+			host,
+			'highlightedNodePath',
+			highlightedNode?.pathLocator || ''
+		);
 	}, [highlightedNode]);
 
 	const meta = useMeta({ dataPlane, highlightedNode, openNode });
 
 	useEffect(() => {
+		// eslint-disable-next-line max-lines-per-function
 		const handler = (e) => {
 			if ((e.ctrlKey && e.altKey) || e.defaultPrevented) {
 				return;
 			}
-			const { dataPlane: items, highlightedNode: node, openNode: open } = meta;
+			const { dataPlane: items, highlightedNode: node, openNode: open } = meta,
+				getIndex = () =>
+					items.findIndex((i) => i.pathLocator === node?.pathLocator);
+
 			switch (e.key) {
 				case 'Up':
 				case 'ArrowUp':
 					{
-						const idx = items.findIndex((i) => i.path === node?.path);
+						const idx = getIndex();
 						e.preventDefault();
 						setHighlightedNode(items[Math.max(idx - 1, 0)]);
 					}
@@ -165,7 +119,7 @@ const TreenodeNavigator = (host) => {
 				case 'Down':
 				case 'ArrowDown':
 					{
-						const idx = items.findIndex((i) => i.path === node?.path);
+						const idx = getIndex();
 						if (idx < items.length - 1) {
 							e.preventDefault();
 							setHighlightedNode(items[idx + 1]);
@@ -173,9 +127,15 @@ const TreenodeNavigator = (host) => {
 					}
 					break;
 
+				case 'Enter':
+					if (node) {
+						e.preventDefault();
+						host.dispatchEvent(new CustomEvent('select-node'));
+					}
+					break;
+
 				case 'Right':
 				case 'ArrowRight':
-				case 'Enter':
 					if (node) {
 						e.preventDefault();
 						open(node);
@@ -191,16 +151,24 @@ const TreenodeNavigator = (host) => {
 	}, [meta]);
 
 	const renderItem = (node, index) => html` <div class="item">
-		${when(
-			renderSection(index, node.parentSectionName),
-			() => html` <div class="section">${node.parentSectionName}</div> `
-		)}
+		${((parentPath) =>
+			when(
+				search &&
+					(index === 0 ||
+						parentPath !== getParentPath(tree, dataPlane[index - 1])),
+				() =>
+					html`
+						<div class="section">
+							${tree.getPathString(parentPath, tree.searchProperty)}
+						</div>
+					`
+			))(getParentPath(tree, node))}
 		<div
 			class=${computeRowClass('node', node, highlightedNode)}
 			@click=${() => setHighlightedNode(node)}
 			@dblclick=${(e) => onNodeDblClicked(e, host)}
 		>
-			<div class="name">${node.name}</div>
+			<div class="name">${node[tree.searchProperty]}</div>
 			${when(
 				tree.hasChildren(node),
 				() => html`
@@ -239,12 +207,16 @@ const TreenodeNavigator = (host) => {
 						<g><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></g>
 					</svg>
 				</span>
-				${nodesOnOpenNodePath.map((node) => {
-					return html` <span class="slash">/</span>
-						<span class="pointer" tabindex="0" @click=${() => openNode(node)}
-							>${node[tree.searchProperty]}</span
-						>`;
-				})}
+				${guard([tree, openNodePath], () =>
+					((openNodePath && tree.getPathNodes(openNodePath)) || []).map(
+						(node) => html`
+							<span class="slash">/</span>
+							<span class="pointer" tabindex="0" @click=${() => openNode(node)}
+								>${node[tree.searchProperty]}</span
+							>
+						`
+					)
+				)}
 			</h3>
 			<cosmoz-input
 				tabindex="0"
@@ -261,7 +233,7 @@ const TreenodeNavigator = (host) => {
 			</div>`
 		)}
 		${when(
-			showGlobalSearchBtn(isSearching, openNodePath),
+			search && openNodePath,
 			() => html`
 				<button class="btn-ghost" @click=${() => setOpenNodePath('')}>
 					${searchGlobalPlaceholder}

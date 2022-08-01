@@ -2,18 +2,17 @@ import { assert, fixture, html } from '@open-wc/testing';
 import { DefaultTree } from '@neovici/cosmoz-tree/cosmoz-default-tree';
 import basicTree from './data/basicTree.js';
 import '../cosmoz-treenode-navigator';
-import { computeDataPlane, computeSearching, renderLevel } from '../helpers';
+import { computeDataPlane, renderLevel } from '../helpers';
 
 suite('cosmoz-treenode-navigator', () => {
 	let navigator;
 
 	setup(async () => {
-		navigator = await fixture(html`
-			<cosmoz-treenode-navigator
-					.tree=${ new DefaultTree(basicTree) }
-					.searchPlaceholder="${ 'Custom search placeholder' }"
-					.searchMinLength="${ 2 }"
-			>`);
+		navigator = await fixture(html` <cosmoz-treenode-navigator
+			.tree=${new DefaultTree(basicTree)}
+			.searchPlaceholder="${'Custom search placeholder'}"
+			.searchMinLength="${2}"
+		></cosmoz-treenode-navigator>`);
 	});
 
 	test('instantiating the element', () => {
@@ -27,10 +26,9 @@ suite('cosmoz-treenode-navigator', () => {
 		navigator.openNodePath = '1000';
 
 		const dataPlane = computeDataPlane(
-			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.tree,
 			navigator.searchValue,
-			renderLevel(navigator.openNodePath, navigator.tree),
-			navigator.tree
+			navigator.openNodePath
 		);
 		// then I can see the contents of the node
 		// and it is ordered folder-first, then alphabetically
@@ -41,27 +39,34 @@ suite('cosmoz-treenode-navigator', () => {
 
 	test('set proper search placeholder', () => {
 		assert.equal(
-			navigator.shadowRoot.querySelector('cosmoz-input')
-				.shadowRoot
-				.querySelector('input').placeholder,
-			'Custom search placeholder');
-	});
-
-	test('compute search if value is bigger than searchMinLength', () => {
-		assert.equal(computeSearching('long string', navigator.searchMinLength), true);
-		assert.equal(computeSearching('a', navigator.searchMinLength), false);
+			navigator.shadowRoot
+				.querySelector('cosmoz-input')
+				.shadowRoot.querySelector('input').placeholder,
+			'Custom search placeholder'
+		);
 	});
 
 	test('should check if node has children', () => {
 		const node = {
 			name: 'D:',
 			path: '1000',
-			children: { 1001: { name: 'Data', pathLocator: '1000.1001', children: { 1002: { name: 'John', pathLocator: '1000.1001.1002' }}}},
+			children: {
+				1001: {
+					name: 'Data',
+					pathLocator: '1000.1001',
+					children: { 1002: { name: 'John', pathLocator: '1000.1001.1002' } },
+				},
+			},
 			parentSectionName: 'D:',
-			pathLocator: '1000'
+			pathLocator: '1000',
 		};
 		assert.equal(navigator.tree.hasChildren(node), true);
-		const node2 = { name: 'Git', path: '1.5.7', parentSectionName: 'C:/Program Files', pathLocator: '1.5.7' };
+		const node2 = {
+			name: 'Git',
+			path: '1.5.7',
+			parentSectionName: 'C:/Program Files',
+			pathLocator: '1.5.7',
+		};
 		assert.equal(navigator.tree.hasChildren(node2), false);
 	});
 
@@ -71,16 +76,14 @@ suite('cosmoz-treenode-navigator', () => {
 		navigator.searchValue = 'John';
 
 		const dataPlane = computeDataPlane(
-			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.tree,
 			navigator.searchValue,
-			renderLevel('1000', navigator.tree),
-			navigator.tree
+			'1000'
 		);
 
 		//then I can see only 1 item matching 'John'
 		assert.lengthOf(dataPlane, 1);
 		assert.equal(dataPlane[0].name, 'John');
-
 	});
 
 	test('not match search string', () => {
@@ -88,10 +91,9 @@ suite('cosmoz-treenode-navigator', () => {
 		// when I search for 'NONEXISTING'
 		navigator.searchValue = 'NONEXISTING';
 		const dataPlane = computeDataPlane(
-			computeSearching(navigator.searchValue, navigator.searchMinLength),
+			navigator.tree,
 			navigator.searchValue,
-			renderLevel('1000', navigator.tree),
-			navigator.tree
+			'1000'
 		);
 
 		//then I can see that is no contents
