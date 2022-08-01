@@ -1,72 +1,26 @@
 export const //
-	/**
-	 * Returns true, if a search string is eligable to trigger a search
-	 * @param {String} value - The search string
-	 * @param {Number} searchMinLength - The minimum length of value to be valid
-	 * @return {Boolean} - If a search should be triggered
-	 */
-	computeSearching = (value, searchMinLength) => {
-		return value && value.length >= searchMinLength && value !== '';
-	},
-	/**
-	 * Normalizes and returns an Array of nodes
-	 * with the properties name, path, parentSectionName, children
-	 * @param {Object} tree - The cosmoz tree
-	 * @param {Array} nodes - The input nodes
-	 * @return {Array} - The normalized nodes
-	 */
-	normalizeNodes = (tree, nodes) => {
-		if (!Array.isArray(nodes)) {
-			return [];
-		}
-		return nodes.map((node) => {
-			if (!node) {
-				return node;
-			}
-			const path = node.pathLocator || node.path,
-				pathLocatorSeparator = tree.pathLocatorSeparator,
-				parentPath = path.includes(pathLocatorSeparator)
-					? path.substring(0, path.lastIndexOf(pathLocatorSeparator))
-					: path;
-			return {
-				name: node[tree.searchProperty],
-				path,
-				children: node[tree.childProperty],
-				parentSectionName: tree.getPathString(parentPath, tree.searchProperty),
-				id: node.id,
-				pathLocator: node.pathLocator,
-			};
-		});
-	},
-	/**
-	 * Returns the found nodes based on a search string and a given tree to be searched
-	 * @param {Boolean} searching - If true, a search should be executed
-	 * @param {String} searchString - The search string
-	 * @param {Array} renderedLevel - The node list on which the search should be executed
-	 * @param {Tree} tree - The main tree
-	 * @return {Array} - The found nodes
-	 */
-	computeDataPlane = (searching, searchString, renderedLevel, tree) => {
-		if (searching && tree) {
-			const results = tree.searchNodes(searchString, renderedLevel, false);
-			return normalizeNodes(tree, results);
-		}
-		return renderedLevel;
+	getParentPath = (tree, node) => {
+		const path = node.pathLocator || node.path,
+			pathLocatorSeparator = tree.pathLocatorSeparator;
+		return path.includes(pathLocatorSeparator)
+			? path.substring(0, path.lastIndexOf(pathLocatorSeparator))
+			: path;
 	},
 	/**
 	 * Returns a node array with the children of a node on the given path
 	 * If the node doesn't have children, the node gets returned
-	 * @param {String} pathLocator - The separated address parts of a node
 	 * @param {Tree} tree - The main tree
+	 * @param {String} pathLocator - The separated address parts of a node
 	 * @return {Array} - Nodes
 	 */
-	renderLevel = (pathLocator, tree) => {
+	renderLevel = (tree, pathLocator) => {
 		if (!tree) {
 			return;
 		}
 		const node = tree.getNodeByPathLocator(pathLocator),
 			children = tree.getChildren(node),
-			level = tree.hasChildren(node) ? children : node,
+			level = children.length > 0 ? children : node,
+			searchProperty = tree.searchProperty,
 			sortFunc = (a, b) => {
 				// First sort based on "folder" status (containing children)
 				if (tree.hasChildren(a)) {
@@ -77,8 +31,8 @@ export const //
 					return 1;
 				}
 				// Then sort on searchProperty
-				const val1 = a[tree.searchProperty],
-					val2 = b[tree.searchProperty];
+				const val1 = a[searchProperty],
+					val2 = b[searchProperty];
 
 				if (val1 > val2) {
 					return 1;
@@ -88,7 +42,21 @@ export const //
 				}
 				return 0;
 			};
-		return normalizeNodes(tree, level).sort(sortFunc);
+		return level.sort(sortFunc);
+	},
+	/**
+	 * Returns the found nodes based on a search string and a given tree to be searched
+	 * @param {Tree} tree - The main tree
+	 * @param {String|undefined} search - The search string
+	 * @param {String} pathLocator - The separated address parts of a node
+	 * @return {Array} - The found nodes
+	 */
+	computeDataPlane = (tree, search, pathLocator) => {
+		if (!tree) {
+			return [];
+		}
+		const nodes = renderLevel(tree, pathLocator);
+		return search ? tree.searchNodes(search, nodes, false) : nodes;
 	},
 	/**
 	 * Returns the classes of a row based its selection state
@@ -123,15 +91,6 @@ export const //
 		);
 	},
 	/**
-	 * Returns true, if the button should be visible
-	 * @param {Boolean} searching - If a search is currently executed
-	 * @param {String} openNodeLevelPath - The open node level
-	 * @return {Boolean} - The visibility of the button
-	 */
-	showGlobalSearchBtn = (searching, openNodeLevelPath) => {
-		return searching && openNodeLevelPath !== '';
-	},
-	/**
 	 * Returns the nodes on a path specified by a given path locator
 	 * @param {String} pathLocator - The separated address parts of a node
 	 * @param {Tree} tree - The main tree
@@ -141,7 +100,7 @@ export const //
 		if (!tree || !pathLocator) {
 			return [];
 		}
-		return normalizeNodes(tree, tree.getPathNodes(pathLocator));
+		return tree.getPathNodes(pathLocator);
 	},
 	/**
 	 * Returns a node based on a given path locator.
