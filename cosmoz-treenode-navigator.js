@@ -1,8 +1,17 @@
-import { component, useEffect, useState, useMemo, useCallback } from 'haunted';
+import {
+	component,
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+	useRef,
+} from 'haunted';
 import { html } from 'lit-html';
 import { when } from 'lit-html/directives/when.js';
 import { guard } from 'lit-html/directives/guard.js';
+import { ref } from 'lit-html/directives/ref.js';
 import { virtualize } from '@lit-labs/virtualizer/virtualize.js';
+
 import '@neovici/cosmoz-input';
 import { useMeta } from '@neovici/cosmoz-utils/hooks/use-meta';
 import { notifyProperty } from '@neovici/cosmoz-utils/hooks/use-notify-property';
@@ -35,6 +44,7 @@ const TreenodeNavigator = (host) => {
 			 */
 			searchMinLength,
 			nodePath,
+			opened,
 		} = host,
 		/**
 		 * The path of the opened node
@@ -72,7 +82,8 @@ const TreenodeNavigator = (host) => {
 				setHighlightedNode();
 			},
 			[tree]
-		);
+		),
+		listRef = useRef();
 
 	useEffect(() => {
 		if (!openNodePath) {
@@ -98,57 +109,87 @@ const TreenodeNavigator = (host) => {
 	const meta = useMeta({ dataPlane, highlightedNode, openNode });
 
 	useEffect(() => {
-		// eslint-disable-next-line max-lines-per-function
-		const handler = (e) => {
-			if ((e.ctrlKey && e.altKey) || e.defaultPrevented) {
-				return;
-			}
-			const { dataPlane: items, highlightedNode: node, openNode: open } = meta,
-				getIndex = () =>
-					items.findIndex((i) => i.pathLocator === node?.pathLocator);
+		if (!opened) {
+			return;
+		}
 
-			switch (e.key) {
-				case 'Up':
-				case 'ArrowUp':
-					{
-						const idx = getIndex();
-						e.preventDefault();
-						setHighlightedNode(items[Math.max(idx - 1, 0)]);
-					}
-					break;
-				case 'Down':
-				case 'ArrowDown':
-					{
-						const idx = getIndex();
-						if (idx < items.length - 1) {
+		const getVlist = () => {
+				const list = listRef.current,
+					vlist = list[Object.getOwnPropertySymbols(list)[0]];
+				return vlist;
+			},
+			// eslint-disable-next-line max-lines-per-function, max-statements
+			handler = (e) => {
+				if ((e.ctrlKey && e.altKey) || e.defaultPrevented) {
+					return;
+				}
+				const {
+						dataPlane: items,
+						highlightedNode: node,
+						openNode: open,
+					} = meta,
+					vlist = getVlist(),
+					getIndex = () =>
+						items.findIndex((i) => i.pathLocator === node?.pathLocator);
+
+				switch (e.key) {
+					case 'Up':
+					case 'ArrowUp':
+						{
+							const idx = getIndex(),
+								nidx = Math.max(idx - 1, 0);
 							e.preventDefault();
-							setHighlightedNode(items[idx + 1]);
+							setHighlightedNode(items[nidx]);
+							if (nidx < vlist._firstVisible) {
+								vlist.scrollToIndex = { index: nidx, position: 'start' };
+							}
 						}
-					}
-					break;
+						break;
+					case 'Down':
+					case 'ArrowDown':
+						{
+							const idx = getIndex();
+							if (idx < items.length - 1) {
+								const nidx = idx + 1;
+								e.preventDefault();
+								setHighlightedNode(items[nidx]);
+								if (nidx > vlist._lastVisible) {
+									vlist.scrollToIndex = { index: nidx, position: 'end' };
+								}
+							}
+						}
+						break;
 
-				case 'Enter':
-					if (node) {
-						e.preventDefault();
-						host.dispatchEvent(new CustomEvent('select-node'));
-					}
-					break;
+					case 'Enter':
+						if (node) {
+							e.preventDefault();
+							host.dispatchEvent(new CustomEvent('node-dblclicked'));
+						}
+						break;
 
-				case 'Right':
-				case 'ArrowRight':
-					if (node) {
-						e.preventDefault();
-						open(node);
-					}
-					break;
-				default:
-					break;
-			}
-		};
+					case 'Right':
+					case 'ArrowRight':
+						if (node && tree.hasChildren(node)) {
+							e.preventDefault();
+							open(node);
+						}
+						break;
+					default:
+						break;
+				}
+			};
+
+		// autoscroll on open
+		(() => {
+			getVlist().scrollToIndex = {
+				index: meta.dataPlane?.indexOf(meta.highlightedNode),
+				position: 'center',
+			};
+		})();
 
 		document.addEventListener('keydown', handler, true);
 		return () => document.removeEventListener('keydown', handler, true);
-	}, [meta]);
+	}, [opened, meta]);
 
 	const renderItem = (node, index) => html` <div class="item">
 		${((parentPath) =>
@@ -227,9 +268,13 @@ const TreenodeNavigator = (host) => {
 		</div>
 		${when(
 			tree,
-			() => html` <div class="items">
+			() => html` <div class="items" ${ref((el) => (listRef.current = el))}>
 				<div virtualizer-sizer></div>
-				${virtualize({ items: dataPlane, renderItem, scroller: true })}
+				${virtualize({
+					items: dataPlane,
+					renderItem,
+					scroller: true,
+				})}
 			</div>`
 		)}
 		${when(

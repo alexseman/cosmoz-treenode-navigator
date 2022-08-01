@@ -127,7 +127,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			<cosmoz-dialog
 				id="dialogTree"
 				class="treeDialog"
-				on-iron-overlay-opened="focusSearch"
+				on-iron-overlay-opened="onOpened"
+				on-iron-overlay-closed="onClosed"
 				modal
 				prerender
 			>
@@ -147,6 +148,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 						nodes-on-node-path="{{ nodesOnNodePath }}"
 						on-node-dblclicked="_selectNodeAndCloseDialog"
 						on-select-node="selectNode"
+						opened="[[ opened ]]"
 					>
 						<slot></slot>
 					</cosmoz-treenode-navigator>
@@ -174,13 +176,13 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		return {
 			multiSelection: {
 				type: Boolean,
-				value: false
+				value: false,
 			},
 			/*
 			 * The main node structure
 			 */
 			tree: {
-				type: Tree
+				type: Tree,
 			},
 			/*
 			 * Currently selected node object
@@ -190,7 +192,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 				value() {
 					return {};
 				},
-				notify: true
+				notify: true,
 			},
 			/**
 			 * Selected nodes
@@ -198,32 +200,40 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			selectedNodes: {
 				type: Array,
 				notify: true,
-				value: () => []
+				value: () => [],
 			},
 			/**
 			 * If true, reset button gets hidden
 			 */
 			noReset: {
 				type: Boolean,
-				value: false
+				value: false,
 			},
+			/**
+			 * If true opened
+			 */
+			opened: {
+				type: Boolean,
+				value: false,
+			},
+
 			/*
 			 * Placeholder for the search field
 			 */
 			searchPlaceholder: {
-				type: String
+				type: String,
 			},
 			/*
 			 * Placeholder for button text
 			 */
 			buttonTextPlaceholder: {
 				type: String,
-				computed: 'getButtonTextPlaceholder(multiSelection)'
+				computed: 'getButtonTextPlaceholder(multiSelection)',
 			},
 
 			buttonText: {
 				type: String,
-				computed: '_getButtonLabel(nodesOnNodePath, buttonTextPlaceholder)'
+				computed: '_getButtonLabel(nodesOnNodePath, buttonTextPlaceholder)',
 			},
 
 			/*
@@ -231,13 +241,13 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			 */
 			nodePath: {
 				type: String,
-				notify: true
+				notify: true,
 			},
 			/*
 			 * The nodes on the path of the selected node
 			 */
 			nodesOnNodePath: {
-				type: Array
+				type: Array,
 			},
 			/*
 			 * Text displayed when local search has finished
@@ -245,14 +255,14 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			 */
 			searchGlobalPlaceholder: {
 				type: String,
-				value: 'Click to search again but globally.'
+				value: 'Click to search again but globally.',
 			},
 			/*
 			 * Settable text for dialog title.
 			 */
 			dialogText: {
 				type: String,
-				value: 'Search or navigate to chosen destination'
+				value: 'Search or navigate to chosen destination',
 			},
 			/*
 			 * Minimum length before an search
@@ -260,14 +270,14 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			 */
 			searchMinLength: {
 				type: Number,
-				value: 1
+				value: 1,
 			},
 			/*
 			 * Path string of highlighted (focused) node
 			 */
 			highlightedNodePath: {
-				type: String
-			}
+				type: String,
+			},
 		};
 	}
 	/**
@@ -324,8 +334,8 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			return placeholder;
 		}
 		return pathParts
-			.filter(n => n)
-			.map(part => part[this.tree.searchProperty])
+			.filter((n) => n)
+			.map((part) => part[this.tree.searchProperty])
 			.join(' / ');
 	}
 	/**
@@ -348,7 +358,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 * @returns {void}
 	 */
 	focusSearch() {
-		this.$.dialogTree.paperDialog.querySelector('#treeNavigator').focus();
+		this.$.dialogTree.paperDialog
+			.querySelector('#treeNavigator')
+			.shadowRoot.querySelector('cosmoz-input')
+			.focus();
 	}
 	/**
 	 * Reset the component to make it ready for reuse
@@ -383,7 +396,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 		if (this.multiSelection) {
 			if (
 				!this.selectedNodes.some(
-					node => node.pathLocator === this.highlightedNodePath
+					(node) => node.pathLocator === this.highlightedNodePath
 				)
 			) {
 				this.push('selectedNodes', this.selectedNode);
@@ -422,6 +435,14 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 				this.$.dialogTree.fit();
 			}
 		);
+	}
+
+	onOpened() {
+		this.opened = true;
+		this.focusSearch();
+	}
+	onClosed() {
+		this.opened = false;
 	}
 }
 customElements.define(CosmozTreenodeButtonView.is, CosmozTreenodeButtonView);
