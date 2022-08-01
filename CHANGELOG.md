@@ -1,3 +1,17 @@
+# [5.3.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.2.0...v5.3.0) (2022-08-01)
+
+
+### Bug Fixes
+
+* close on enter ([e7cd4d1](https://github.com/neovici/cosmoz-treenode-navigator/commit/e7cd4d191abdf1b9486a5d097154f530130d4a96))
+* **cosmoz-treenode-button-view:** pass opened to treenode ([4f43ade](https://github.com/neovici/cosmoz-treenode-navigator/commit/4f43ade0844fe5168cf84f6f7833dc61a608e176))
+* **renderLevel:** handle leaf nodes ([760f6bf](https://github.com/neovici/cosmoz-treenode-navigator/commit/760f6bf4888ccbec0184ca72ea21ab4781e66f46))
+
+
+### Features
+
+* **treenode-navigator:** autoscroll to highlighed node ([5c55a38](https://github.com/neovici/cosmoz-treenode-navigator/commit/5c55a38ad406b3d711405b8173c388fb26d5eb6c))
+
 # [5.2.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.1.0...v5.2.0) (2022-08-01)
 
 
