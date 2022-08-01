@@ -163,7 +163,7 @@ const TreenodeNavigator = (host) => {
 					case 'Enter':
 						if (node) {
 							e.preventDefault();
-							host.dispatchEvent(new CustomEvent('select-node'));
+							host.dispatchEvent(new CustomEvent('node-dblclicked'));
 						}
 						break;
 
