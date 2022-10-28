@@ -155,7 +155,6 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 					<div class="buttons">
 						<paper-button
 							disabled="[[!highlightedNodePath]]"
-							dialog-confirm
 							autofocus
 							on-click="selectNode"
 							>[[ _('Select', t) ]]</paper-button
@@ -404,6 +403,7 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 			this.nodePath = '';
 			this.selectedNode = {};
 		}
+		this.$.dialogTree.close();
 	}
 	/**
 	 * Selects node and closes the dialog
@@ -411,7 +411,6 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 	 */
 	_selectNodeAndCloseDialog() {
 		this.selectNode();
-		this.$.dialogTree.close();
 	}
 	/**
 	 * Determine if selected nodes container should be visible or not.
