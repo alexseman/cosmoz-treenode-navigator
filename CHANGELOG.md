@@ -1,3 +1,10 @@
+# [5.4.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.3.0...v5.4.0) (2022-11-03)
+
+
+### Features
+
+* **select:** close dialog manually ([3abb0d0](https://github.com/neovici/cosmoz-treenode-navigator/commit/3abb0d0d75c11ad3e77001ba401f4fe998ad66a7))
+
 # [5.3.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.2.0...v5.3.0) (2022-08-01)
 
 
