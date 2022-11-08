@@ -41,12 +41,10 @@ class CosmozTreenodeButtonView extends translatable(PolymerElement) {
 					text-align: left;
 				}
 				/* Safari only css fix */
-				@media not all and (min-resolution: 0.001dpcm) {
-					@supports (-webkit-appearance: none) {
-						.pathToNode span {
-							display: inline-block;
-						}
-					}
+				_:matches(x),
+				_:lang(x) + _:-webkit-full-screen-document,
+				.pathToNode span {
+					display: inline-block;
 				}
 
 				#chips {
