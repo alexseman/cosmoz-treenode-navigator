@@ -1,3 +1,10 @@
+## [5.4.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.0...v5.4.1) (2022-11-08)
+
+
+### Bug Fixes
+
+* **button-view:** update safari rule ([c98f7fc](https://github.com/neovici/cosmoz-treenode-navigator/commit/c98f7fc63328724fbd0e19ca06a9dc2b7acd8633))
+
 # [5.4.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.3.0...v5.4.0) (2022-11-03)
 
 
