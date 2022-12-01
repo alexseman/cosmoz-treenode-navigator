@@ -1,3 +1,10 @@
+## [5.4.2](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.1...v5.4.2) (2022-12-01)
+
+
+### Bug Fixes
+
+* handle missing tree ([8a45a18](https://github.com/neovici/cosmoz-treenode-navigator/commit/8a45a1828ff0304b760bbafb94e21fc8eac4af52))
+
 ## [5.4.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.0...v5.4.1) (2022-11-08)
 
 
