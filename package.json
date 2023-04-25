@@ -84,6 +84,6 @@
 		"@web/test-runner": "^0.13.19",
 		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"husky": "^8.0.0",
-		"semantic-release": "^19.0.3"
+		"semantic-release": "^21.0.1"
 	}
 }
