@@ -1,3 +1,10 @@
+# [5.5.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.2...v5.5.0) (2023-04-25)
+
+
+### Features
+
+* update virtualizer ([5112227](https://github.com/neovici/cosmoz-treenode-navigator/commit/51122278c26cbe01b90d1bc155b0dcb5c3a5e0b0))
+
 ## [5.4.2](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.1...v5.4.2) (2022-12-01)
 
 
