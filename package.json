@@ -54,7 +54,8 @@
 		}
 	},
 	"dependencies": {
-		"@lit-labs/virtualizer": "^0.7.1",
+		"@lit-labs/virtualizer": "^2.0.0",
+		"@neovici/cfg": "^1.33.0",
 		"@neovici/cosmoz-dialog": "^3.0.0",
 		"@neovici/cosmoz-i18next": "^3.2.0",
 		"@neovici/cosmoz-input": "^3.0.0",
@@ -71,7 +72,6 @@
 	"devDependencies": {
 		"@commitlint/cli": "^17.0.0",
 		"@commitlint/config-conventional": "^17.0.0",
-		"@neovici/cfg": "^1.15.2",
 		"@open-wc/testing": "^3.0.0",
 		"@polymer/iron-ajax": "^3.0.0",
 		"@polymer/iron-component-page": "^4.0.0",
@@ -80,8 +80,6 @@
 		"@polymer/test-fixture": "^4.0.2",
 		"@semantic-release/changelog": "^6.0.0",
 		"@semantic-release/git": "^10.0.0",
-		"@web/dev-server": "^0.1.25",
-		"@web/test-runner": "^0.13.19",
 		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"husky": "^8.0.0",
 		"semantic-release": "^21.0.1"
