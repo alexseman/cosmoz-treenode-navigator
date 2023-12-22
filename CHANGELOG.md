@@ -1,3 +1,11 @@
+# [5.6.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.5.0...v5.6.0) (2023-12-22)
+
+
+### Features
+
+* handle undefined node in virtualizer ([2113d89](https://github.com/neovici/cosmoz-treenode-navigator/commit/2113d89042e51a71f4b144cfab7e9130fdb75cb0))
+* update packaged files ([65de45b](https://github.com/neovici/cosmoz-treenode-navigator/commit/65de45b1a974d8aa476dc31a66c0b41cd7565f18))
+
 # [5.5.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.4.2...v5.5.0) (2023-04-25)
 
 
