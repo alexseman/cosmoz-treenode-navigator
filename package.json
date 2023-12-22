@@ -22,7 +22,8 @@
 	},
 	"files": [
 		"cosmoz-*.js",
-		"helpers.js"
+		"helpers.js",
+		"test/data"
 	],
 	"scripts": {
 		"lint": "eslint --cache --ext .js .",
