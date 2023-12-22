@@ -20,6 +20,10 @@
 	"directories": {
 		"test": "test"
 	},
+	"files": [
+		"cosmoz-*.js",
+		"helpers.js"
+	],
 	"scripts": {
 		"lint": "eslint --cache --ext .js .",
 		"start": "wds",
