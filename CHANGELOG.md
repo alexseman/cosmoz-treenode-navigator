@@ -1,3 +1,10 @@
+# [5.7.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.6.0...v5.7.0) (2023-12-22)
+
+
+### Features
+
+* include test data in package ([110b002](https://github.com/neovici/cosmoz-treenode-navigator/commit/110b002b4042ded96b52ea60f9e7ed68b5b96e53))
+
 # [5.6.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.5.0...v5.6.0) (2023-12-22)
 
 
