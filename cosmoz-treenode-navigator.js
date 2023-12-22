@@ -6,7 +6,7 @@ import {
 	useCallback,
 	useRef,
 } from 'haunted';
-import { html } from 'lit-html';
+import { html, nothing } from 'lit-html';
 import { when } from 'lit-html/directives/when.js';
 import { guard } from 'lit-html/directives/guard.js';
 import { ref } from 'lit-html/directives/ref.js';
@@ -61,14 +61,14 @@ const TreenodeNavigator = (host) => {
 		[searchValue, setSearchValue] = useState(''),
 		search = useMemo(
 			() => (searchValue?.length > searchMinLength && searchValue) || undefined,
-			[searchValue, searchMinLength]
+			[searchValue, searchMinLength],
 		),
 		/**
 		 * The currently displayed node list
 		 */
 		dataPlane = useMemo(
 			() => computeDataPlane(tree, search, openNodePath),
-			[tree, search, openNodePath]
+			[tree, search, openNodePath],
 		),
 		/**
 		 * Opens a node (renderLevel) based on a given path
@@ -81,7 +81,7 @@ const TreenodeNavigator = (host) => {
 				setSearchValue('');
 				setHighlightedNode();
 			},
-			[tree]
+			[tree],
 		),
 		listRef = useRef();
 
@@ -102,7 +102,7 @@ const TreenodeNavigator = (host) => {
 		notifyProperty(
 			host,
 			'highlightedNodePath',
-			highlightedNode?.pathLocator || ''
+			highlightedNode?.pathLocator || '',
 		);
 	}, [highlightedNode]);
 
@@ -191,46 +191,48 @@ const TreenodeNavigator = (host) => {
 		return () => document.removeEventListener('keydown', handler, true);
 	}, [opened, meta]);
 
-	const renderItem = (node, index) => html` <div class="item">
-		${((parentPath) =>
-			when(
-				search &&
-					(index === 0 ||
-						parentPath !== getParentPath(tree, dataPlane[index - 1])),
-				() =>
-					html`
-						<div class="section">
-							${tree.getPathString(parentPath, tree.searchProperty)}
-						</div>
-					`
-			))(getParentPath(tree, node))}
-		<div
-			class=${computeRowClass('node', node, highlightedNode)}
-			@click=${() => setHighlightedNode(node)}
-			@dblclick=${(e) => onNodeDblClicked(e, host)}
-		>
-			<div class="name">${node[tree.searchProperty]}</div>
-			${when(
-				tree.hasChildren(node),
-				() => html`
-					<span class="icon" @click=${() => openNode(node)}>
-						<svg
-							viewBox="0 0 24 24"
-							preserveAspectRatio="xMidYMid meet"
-							focusable="false"
-							style="pointer-events: none; display: block; width: 100%; height: 100%;"
-						>
-							<g>
-								<path
-									d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
-								></path>
-							</g>
-						</svg>
-					</span>
-				`
-			)}
-		</div>
-	</div>`;
+	const renderItem = (node, index) =>
+		node
+			? html` <div class="item">
+					${((parentPath) =>
+						when(
+							search &&
+								(index === 0 ||
+									parentPath !== getParentPath(tree, dataPlane[index - 1])),
+							() => html`
+								<div class="section">
+									${tree.getPathString(parentPath, tree.searchProperty)}
+								</div>
+							`,
+						))(getParentPath(tree, node))}
+					<div
+						class=${computeRowClass('node', node, highlightedNode)}
+						@click=${() => setHighlightedNode(node)}
+						@dblclick=${(e) => onNodeDblClicked(e, host)}
+					>
+						<div class="name">${node[tree.searchProperty]}</div>
+						${when(
+							tree.hasChildren(node),
+							() => html`
+								<span class="icon" @click=${() => openNode(node)}>
+									<svg
+										viewBox="0 0 24 24"
+										preserveAspectRatio="xMidYMid meet"
+										focusable="false"
+										style="pointer-events: none; display: block; width: 100%; height: 100%;"
+									>
+										<g>
+											<path
+												d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"
+											></path>
+										</g>
+									</svg>
+								</span>
+							`,
+						)}
+					</div>
+				</div>`
+			: nothing;
 
 	return html`
 		<style>
@@ -255,8 +257,8 @@ const TreenodeNavigator = (host) => {
 							<span class="pointer" tabindex="0" @click=${() => openNode(node)}
 								>${node[tree.searchProperty]}</span
 							>
-						`
-					)
+						`,
+					),
 				)}
 			</h3>
 			<cosmoz-input
@@ -268,14 +270,15 @@ const TreenodeNavigator = (host) => {
 		</div>
 		${when(
 			tree,
-			() => html` <div class="items" ${ref((el) => (listRef.current = el))}>
-				<div virtualizer-sizer></div>
-				${virtualize({
-					items: dataPlane,
-					renderItem,
-					scroller: true,
-				})}
-			</div>`
+			() =>
+				html` <div class="items" ${ref((el) => (listRef.current = el))}>
+					<div virtualizer-sizer></div>
+					${virtualize({
+						items: dataPlane,
+						renderItem,
+						scroller: true,
+					})}
+				</div>`,
 		)}
 		${when(
 			search && openNodePath,
@@ -283,12 +286,12 @@ const TreenodeNavigator = (host) => {
 				<button class="btn-ghost" @click=${() => setOpenNodePath('')}>
 					${searchGlobalPlaceholder}
 				</button>
-			`
+			`,
 		)}
 	`;
 };
 
 customElements.define(
 	'cosmoz-treenode-navigator',
-	component(TreenodeNavigator)
+	component(TreenodeNavigator),
 );
