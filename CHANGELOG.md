@@ -1,3 +1,15 @@
+# [6.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.7.0...v6.0.0) (2024-01-11)
+
+
+### Features
+
+* update to pion ([8090232](https://github.com/neovici/cosmoz-treenode-navigator/commit/80902326968e366ac0a6d7300db63ebf2ba173a7))
+
+
+### BREAKING CHANGES
+
+* Update to @pionjs/pion
+
 # [5.7.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.6.0...v5.7.0) (2023-12-22)
 
 
