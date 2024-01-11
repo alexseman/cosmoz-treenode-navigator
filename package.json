@@ -63,21 +63,21 @@
 		"@neovici/cfg": "^1.33.0",
 		"@neovici/cosmoz-dialog": "^3.0.0",
 		"@neovici/cosmoz-i18next": "^3.2.0",
-		"@neovici/cosmoz-input": "^3.0.0",
+		"@neovici/cosmoz-input": "^4.0.0",
 		"@neovici/cosmoz-tree": "^3.0.0",
-		"@neovici/cosmoz-utils": "^5.0.0",
+		"@neovici/cosmoz-utils": "^6.0.0",
+		"@pionjs/pion": "^2.0.0",
 		"@polymer/iron-icons": "^3.0.0",
 		"@polymer/paper-button": "^3.0.0",
 		"@polymer/paper-icon-button": "^3.0.0",
 		"@polymer/paper-input": "^3.2.0",
 		"@polymer/polymer": "^3.4.0",
-		"haunted": "^5.0.0",
-		"lit-html": "^2.0.0"
+		"lit-html": "^2.0.0 || ^3.0.0"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^17.0.0",
-		"@commitlint/config-conventional": "^17.0.0",
-		"@open-wc/testing": "^3.0.0",
+		"@commitlint/cli": "^18.0.0",
+		"@commitlint/config-conventional": "^18.0.0",
+		"@open-wc/testing": "^4.0.0",
 		"@polymer/iron-ajax": "^3.0.0",
 		"@polymer/iron-component-page": "^4.0.0",
 		"@polymer/iron-demo-helpers": "^3.0.0",
@@ -87,6 +87,6 @@
 		"@semantic-release/git": "^10.0.0",
 		"@webcomponents/webcomponentsjs": "^2.0.0",
 		"husky": "^8.0.0",
-		"semantic-release": "^21.0.1"
+		"semantic-release": "^22.0.0"
 	}
 }

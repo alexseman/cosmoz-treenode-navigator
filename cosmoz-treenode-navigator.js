@@ -5,7 +5,7 @@ import {
 	useMemo,
 	useCallback,
 	useRef,
-} from 'haunted';
+} from '@pionjs/pion';
 import { html, nothing } from 'lit-html';
 import { when } from 'lit-html/directives/when.js';
 import { guard } from 'lit-html/directives/guard.js';
