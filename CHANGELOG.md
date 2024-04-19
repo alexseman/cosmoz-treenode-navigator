@@ -1,3 +1,10 @@
+## [6.0.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v6.0.0...v6.0.1) (2024-04-19)
+
+
+### Bug Fixes
+
+* **dependencies:** newest input dependencies are needed in all the repos using them ([5ce9675](https://github.com/neovici/cosmoz-treenode-navigator/commit/5ce9675d7fa4b0f73a0dd1a85f7d21e9834ed3f9))
+
 # [6.0.0](https://github.com/neovici/cosmoz-treenode-navigator/compare/v5.7.0...v6.0.0) (2024-01-11)
 
 
