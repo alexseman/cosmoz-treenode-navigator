@@ -1,3 +1,10 @@
+## [6.0.2](https://github.com/neovici/cosmoz-treenode-navigator/compare/v6.0.1...v6.0.2) (2025-02-14)
+
+
+### Bug Fixes
+
+* **styles:** added styling that underlines the hovered part of the path ([#144](https://github.com/neovici/cosmoz-treenode-navigator/issues/144)) ([13aab03](https://github.com/neovici/cosmoz-treenode-navigator/commit/13aab03d73ff0f6973df3519cc9d517c968f5c24))
+
 ## [6.0.1](https://github.com/neovici/cosmoz-treenode-navigator/compare/v6.0.0...v6.0.1) (2024-04-19)
 
 
