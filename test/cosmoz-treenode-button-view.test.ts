@@ -15,10 +15,10 @@ suite('rtl', () => {
 	});
 
 	test('button renders selected path', (done) => {
-		treeButton.nodePath = '1.2.3';
+		treeButton.nodesOnNodePath = treeButton.tree.getPathNodes('1.2.3');
 		setTimeout(() => {
 			const buttonLabel = treeButton.shadowRoot
-				.querySelector('.actions__open-dialog')
+				.querySelector('.action-open')
 				.textContent.trim();
 			assert.isTrue(buttonLabel.endsWith('1 / 2 / 3'));
 			done();
@@ -26,9 +26,7 @@ suite('rtl', () => {
 	});
 
 	test('opens dialog on button click', async () => {
-		const openButton = treeButton.shadowRoot.querySelector(
-			'.actions__open-dialog',
-		);
+		const openButton = treeButton.shadowRoot.querySelector('.action-open');
 		openButton.click();
 
 		await nextFrame();
@@ -46,9 +44,7 @@ suite('rtl', () => {
 	});
 
 	test('closes dialog on cancel button click', async () => {
-		const openButton = treeButton.shadowRoot.querySelector(
-			'.actions__open-dialog',
-		);
+		const openButton = treeButton.shadowRoot.querySelector('.action-open');
 		openButton.click();
 
 		await nextFrame();
@@ -64,13 +60,13 @@ suite('rtl', () => {
 		assert.isFalse(!!dialog.open, 'Dialog should be closed');
 	});
 
-	test('sets button label from nodePath', async () => {
-		treeButton.nodePath = '1.2.3';
+	test('sets button label from nodesOnNodePath', async () => {
+		treeButton.nodesOnNodePath = treeButton.tree.getPathNodes('1.2.3');
 
 		await nextFrame();
 
 		const buttonLabel = treeButton.shadowRoot
-			.querySelector('.actions__open-dialog')
+			.querySelector('.action-open')
 			.textContent.trim();
 
 		assert.isTrue(
@@ -78,7 +74,7 @@ suite('rtl', () => {
 			'Button should display the path',
 		);
 
-		treeButton.nodePath = '';
+		treeButton.nodesOnNodePath = [];
 		await nextFrame();
 	});
 

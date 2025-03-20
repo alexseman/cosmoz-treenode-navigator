@@ -23,9 +23,11 @@ export const //
 		if (!tree) {
 			return undefined;
 		}
-		const node = tree.getNodeByPathLocator(pathLocator),
-			children = node ? tree.getChildren(node) : [],
-			{ searchProperty } = tree,
+
+		const node = tree.getNodeByPathLocator(pathLocator);
+		const children = node ? tree.getChildren(node) : [];
+
+		const { searchProperty } = tree,
 			sortFunc = (a: Node, b: Node): number => {
 				// First sort based on "folder" status (containing children)
 				if (tree.hasChildren(a)) {
@@ -64,7 +66,9 @@ export const //
 		if (!tree) {
 			return [];
 		}
+
 		const nodes = renderLevel(tree, pathLocator);
+
 		return search
 			? tree.searchNodes(search, nodes as Node[], false)
 			: (nodes as Node[]);

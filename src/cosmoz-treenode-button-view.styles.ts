@@ -76,31 +76,28 @@ export default css`
 		box-shadow: 0 2px 3px 0 rgb(0 0 0 / 30%);
 	}
 
-	.actions__open-dialog {
-		min-width: 180px;
+	.action-open {
+		flex: auto;
 	}
 
-	.actions__clear {
+	.path-text {
+		display: block;
+
+		overflow: hidden;
+		white-space: nowrap;
+
+		text-overflow: ellipsis;
+		direction: rtl;
+	}
+
+	.action-reset {
 		flex-basis: 100px;
 		flex-grow: 0;
 		flex-shrink: 0;
 	}
 
-	.actions__open-dialog + .actions__clear {
+	.action-open + .action-reset {
 		margin-left: 0;
-	}
-
-	.open {
-		flex: auto;
-	}
-
-	.pathToNode {
-		max-width: 320px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		direction: rtl;
-		text-align: left;
 	}
 
 	/* Safari only css fix */
@@ -170,6 +167,7 @@ export default css`
 
 		padding: 0;
 		border-radius: 10px;
+		border: none;
 	}
 
 	.dialog::backdrop {
@@ -203,6 +201,7 @@ export default css`
 		border: 1px solid rgb(164, 171, 174);
 		font-size: 15px;
 		cursor: pointer;
+		user-select: none;
 	}
 
 	.dialog-footer-button:not(:disabled):active {
@@ -213,6 +212,5 @@ export default css`
 		color: #a8a8a8;
 		background-color: #f2f2f2;
 		cursor: default;
-		user-select: none;
 	}
 `;
