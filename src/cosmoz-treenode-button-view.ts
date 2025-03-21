@@ -13,7 +13,7 @@ import style from './cosmoz-treenode-button-view.styles';
 
 import './cosmoz-treenode-navigator';
 import { useKeyDown } from './hooks/useKeyDown';
-import { getNode, getTreePathParts } from './util/helpers';
+import { getTreePathParts } from './util/helpers';
 import { when } from 'lit-html/directives/when.js';
 import { debounce$ } from '@neovici/cosmoz-utils/promise';
 import { Node, Tree } from '@neovici/cosmoz-tree';
@@ -27,7 +27,6 @@ type ButtonViewProps = {
 	noReset?: boolean;
 	searchGlobalPlaceholder?: string;
 	searchMinLength?: number;
-	nodePath?: string;
 };
 
 type ClearItemSelectionParams = {
@@ -40,7 +39,6 @@ type ObservedAttributes =
 	| 'dialog-text'
 	| 'search-placeholder'
 	| 'search-global-placeholder'
-	| 'node-path'
 	| 'no-reset'
 	| 'search-min-length';
 
@@ -57,7 +55,6 @@ const CosmozNodeButtonView = ({
 	noReset = false,
 	searchGlobalPlaceholder,
 	searchMinLength,
-	nodePath,
 }: ButtonViewProps) => {
 	const dialogRef = useRef<ButtonViewDialog | null>(null);
 	const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -65,15 +62,12 @@ const CosmozNodeButtonView = ({
 	const [highlightedNode, setHighlightedNode] = useProperty<Node | null>(
 		'highlightedNode',
 	);
+	const [nodesOnNodePath, setNodesOnNodePath] = useProperty<Node[]>(
+		'nodesOnNodePath',
+		[],
+	);
 	const [opened, setOpened] = useState(false);
-	const [nodesOnNodePath, setNodesOnNodePath] = useState<Node[]>([]);
 	const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-
-	useEffect(() => {
-		if (nodePath && tree) {
-			setNodesOnNodePath(getTreePathParts(nodePath, tree));
-		}
-	}, [nodePath, tree]);
 
 	useEffect(() => {
 		if (dialogRef.current) {
@@ -143,19 +137,17 @@ const CosmozNodeButtonView = ({
 	useKeyDown('Escape', onClose);
 
 	const selectNode = () => {
-		if (!highlightedNode) {
+		if (!highlightedNode?.pathLocator) {
 			return;
 		}
 
-		const path = highlightedNode.pathLocator;
-		const node = getNode(path, tree);
+		setNodesOnNodePath(getTreePathParts(highlightedNode.pathLocator, tree));
 
-		setNodesOnNodePath(getTreePathParts(path, tree));
-
-		if (multiSelection && node) {
-			if (!selectedNodes.some((n) => n.pathLocator === path)) {
-				setSelectedNodes([...selectedNodes, node]);
-			}
+		if (
+			multiSelection &&
+			!selectedNodes.some((n) => n.pathLocator === highlightedNode.pathLocator)
+		) {
+			setSelectedNodes([...selectedNodes, highlightedNode]);
 		}
 
 		onClose();
@@ -164,19 +156,21 @@ const CosmozNodeButtonView = ({
 	return html`
 		<div class="actions" part="actions">
 			<button
-				class="actions__open-dialog"
+				class="action-open"
 				type="button"
 				@click=${onOpen}
 				part="action-open"
 			>
-				${buttonLabel}
+				<div class="path-text">
+					<span>${buttonLabel}</span>
+				</div>
 			</button>
 			${when(
 				enableReset,
 				() =>
 					html` <button
 						@click=${reset}
-						class="actions__clear"
+						class="action-reset"
 						part="action-reset"
 					>
 						<svg
@@ -225,6 +219,7 @@ const CosmozNodeButtonView = ({
 				</div>
 			`,
 		)}
+
 		<dialog
 			class="dialog"
 			part="dialog"
@@ -246,7 +241,7 @@ const CosmozNodeButtonView = ({
 					.searchMinLength=${searchMinLength}
 					.tree=${tree}
 					.opened=${opened}
-					@select-node=${selectNode}
+					.nodesOnNodePath=${nodesOnNodePath}
 					@node-dblclicked=${selectNode}
 					@on-data-plane-changed=${refit}
 				>
@@ -282,7 +277,7 @@ CosmozNodeButtonView.observedAttributes = [
 	'dialog-text',
 	'search-placeholder',
 	'search-global-placeholder',
-	'node-path',
+	'no-reset',
 ] as readonly ObservedAttributes[];
 
 customElements.define(

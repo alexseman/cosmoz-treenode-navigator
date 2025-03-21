@@ -33,6 +33,7 @@ type TreenodeNavigatorProps = {
 	searchGlobalPlaceholder?: string;
 	searchMinLength?: number;
 	opened?: boolean;
+	nodesOnNodePath?: Node[];
 };
 
 type NavigatorMeta = {
@@ -60,6 +61,7 @@ const NodeNavigator = ({
 	 */
 	searchMinLength,
 	opened,
+	nodesOnNodePath,
 }: TreenodeNavigatorProps) => {
 	const listRef = useRef<HTMLElement>();
 	const host = useHost();
@@ -68,8 +70,8 @@ const NodeNavigator = ({
 		'highlightedNode',
 	);
 
-	const [searchValue, setSearchValue] = useState('');
-	const [openNodePath, setOpenNodePath] = useState('');
+	const [searchValue, setSearchValue] = useState<string>('');
+	const [openNodePath, setOpenNodePath] = useState<string>('');
 
 	const search = useMemo(
 		() =>
@@ -88,15 +90,11 @@ const NodeNavigator = ({
 	 * @param clickedNode - The clicked node
 	 * @return undefined
 	 */
-	const onNodeClick = useCallback(
-		(clickedNode?: Node | null) => {
-			setOpenNodePath(clickedNode?.pathLocator || '');
-			setSearchValue('');
-
-			setHighlightedNode(null);
-		},
-		[tree],
-	);
+	const onNodeClick = useCallback((clickedNode?: Node | null) => {
+		setOpenNodePath(clickedNode?.pathLocator || '');
+		setSearchValue('');
+		setHighlightedNode(null);
+	}, []);
 
 	useEffect(() => {
 		if (!openNodePath) {
@@ -104,8 +102,28 @@ const NodeNavigator = ({
 		}
 
 		notifyProperty(host, 'highlightedNodePath', '');
-		notifyProperty(host, 'nodesOnNodePath', []);
 	}, [openNodePath]);
+
+	useEffect(() => {
+		if (!nodesOnNodePath?.length || !tree || !opened) {
+			return;
+		}
+
+		const lastNode = nodesOnNodePath[nodesOnNodePath.length - 1];
+		if (!lastNode?.pathLocator) {
+			return;
+		}
+
+		if (tree.hasChildren(lastNode)) {
+			setOpenNodePath(lastNode.pathLocator);
+			return;
+		}
+
+		const parentPath = getParentPath(tree, lastNode);
+
+		setOpenNodePath(parentPath);
+		setHighlightedNode(lastNode);
+	}, [nodesOnNodePath, tree, opened]);
 
 	useEffect(() => {
 		notifyProperty(
@@ -132,7 +150,6 @@ const NodeNavigator = ({
 			return list[Object.getOwnPropertySymbols(list)[0]];
 		};
 
-		// autoscroll to highlighted node
 		const vlist = getVlist();
 		if (vlist && meta.highlightedNode) {
 			const index = meta.dataPlane?.indexOf(meta.highlightedNode);
@@ -166,7 +183,6 @@ const NodeNavigator = ({
 				if (newIndex >= 0 && newIndex < items.length) {
 					setHighlightedNode(items[newIndex]);
 
-					// check if scrolling is needed
 					const needsScroll =
 						position === 'start'
 							? newIndex < vlist._firstVisible
