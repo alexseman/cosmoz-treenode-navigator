@@ -2,6 +2,7 @@ node_modules/
 coverage/
 dist/
 storybook-static/
+demo/
 debug.log
 yarn-error.log
 .vscode
