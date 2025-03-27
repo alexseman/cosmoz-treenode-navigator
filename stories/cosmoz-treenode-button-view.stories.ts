@@ -29,7 +29,7 @@ const Template = (args) => {
 				search-placeholder=${args.searchPlaceholder}
 				search-global-placeholder=${args.searchGlobalPlaceholder}
 				.searchMinLength=${args.searchMinLength}
-				no-reset=${args.noReset}
+				.noReset=${args.noReset}
 				.multiSelection=${args.multiSelection}
 			></cosmoz-treenode-button-view>
 		</div>
