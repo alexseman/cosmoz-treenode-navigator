@@ -35,6 +35,7 @@ type TreenodeNavigatorProps = {
 	searchMinLength?: number;
 	opened?: boolean;
 	nodesOnNodePath?: Node[];
+	searchDebounceTimeout: number;
 };
 
 type NavigatorMeta = {
@@ -60,8 +61,9 @@ const NodeNavigator = ({
 	/**
 	 * Minimum length of searchValue to trigger a search
 	 */
-	searchMinLength,
+	searchMinLength = 3,
 	opened,
+	searchDebounceTimeout = 2000,
 }: TreenodeNavigatorProps) => {
 	const listRef = useRef<HTMLElement>();
 	const host = useHost();
@@ -75,15 +77,23 @@ const NodeNavigator = ({
 		[],
 	);
 
+	const [search, setSearch] = useState<string>('');
 	const [searchValue, setSearchValue] = useState<string>('');
 	const [openNodePath, setOpenNodePath] = useState<string>('');
 
-	const search = useMemo(
-		() =>
-			(searchValue?.length > (searchMinLength ?? 2) - 1 && searchValue) ||
-			undefined,
-		[searchValue, searchMinLength],
-	);
+	useEffect(() => {
+		const timeoutId = setTimeout(() => {
+			const searchLength = searchValue.trim().length;
+
+			if (searchLength > 0 && searchLength < searchMinLength) {
+				return;
+			}
+
+			setSearch(searchValue.trim());
+		}, searchDebounceTimeout);
+
+		return () => clearTimeout(timeoutId);
+	}, [searchValue]);
 
 	const dataPlane = useMemo(
 		() => computeDataPlane(tree, search, openNodePath),

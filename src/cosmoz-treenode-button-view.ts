@@ -26,6 +26,7 @@ type ButtonViewProps = {
 	noReset?: boolean;
 	searchGlobalPlaceholder?: string;
 	searchMinLength?: number;
+	searchDebounceTimeout: number;
 };
 
 type ClearItemSelectionParams = {
@@ -53,7 +54,8 @@ const CosmozNodeButtonView = ({
 	searchPlaceholder,
 	noReset = false,
 	searchGlobalPlaceholder,
-	searchMinLength,
+	searchMinLength = 3,
+	searchDebounceTimeout = 2000,
 }: ButtonViewProps) => {
 	const dialogRef = useRef<ButtonViewDialog | null>(null);
 	const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -235,6 +237,7 @@ const CosmozNodeButtonView = ({
 					.searchPlaceholder=${searchPlaceholder}
 					.searchGlobalPlaceholder=${searchGlobalPlaceholder}
 					.searchMinLength=${searchMinLength}
+					.searchDebounceTimeout=${searchDebounceTimeout}
 					.tree=${tree}
 					.opened=${opened}
 					.nodesOnNodePath=${nodesOnNodePath}
